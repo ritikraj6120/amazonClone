@@ -1,14 +1,15 @@
 const User = require('../models/User')
-
+const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 
 const signUp = async (req,res)=>{
 		// console.log(req);
 		let isAuthenticated = false;
 		// If there are errors, return Bad request and the errors
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			return res.status(400).json({ isAuthenticated, error: errors.array() });
-		}
+		// const errors = validationResult(req);
+		// if (!errors.isEmpty()) {
+		// 	return res.status(400).json({ isAuthenticated, error: errors.array() });
+		// }
 		try {
 			// Check whether the user with this email exists already
 			let user = await User.findOne({ email: req.body.email });
@@ -20,8 +21,7 @@ const signUp = async (req,res)=>{
 	
 			// Create a new user
 			user = await User.create({
-				fname: req.body.fname,
-				lname: req.body.lname,
+				name: req.body.name,
 				password: secPass,
 				email: req.body.email,
 			});
@@ -39,10 +39,10 @@ const signUp = async (req,res)=>{
 const signIn= async (req, res) => {
 		let success = false;
 		// If there are errors, return Bad request and the errors
-		const errors = validationResult(req);
-		if (!errors.isEmpty()) {
-			return res.status(400).json({ success, error: "The e-mail address and/or password you specified are not correct." });
-		}
+		// const errors = validationResult(req);
+		// if (!errors.isEmpty()) {
+		// 	return res.status(400).json({ success, error: "The e-mail address and/or password you specified are not correct." });
+		// }
 
 		const { email, password } = req.body;
 		try {
@@ -62,9 +62,9 @@ const signIn= async (req, res) => {
 					_id: user._id
 				}
 		
-			const authtoken = jwt.sign(data, JWT_SECRET);
+			const authtoken = jwt.sign(data, process.env.JWT_SECRET);
 			success = true;
-			return res.status(200).json({ success, authtoken });
+			return res.status(200).json({ success, authtoken,email:user.email });
 
 		} catch (error) {
 			console.error(error.message);

@@ -11,13 +11,21 @@ const ItemsSchema = new Schema({
 		required: true,
 	},
 	price: {
-		type: String,
+		type: Number,
 		required: true
 	},
 	rating: {
 		type: Number,
 		required : true
 	},
+	description:{
+		type:String,
+		required : true
+	},
+	category:{
+		type:String,
+		required : true
+	}
 });
 const Items = mongoose.model('items', ItemsSchema);
 module.exports = Items;
