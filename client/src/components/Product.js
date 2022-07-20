@@ -4,7 +4,6 @@ import './Product.css'
 const Product = (data) => {
 const  {id,title,image,price,rating}=data
 const dispatch=useDispatch();
-
 // const orderState = useSelector(state => state.orderState);
 //   const [{ basket }] = useStateValue();
 
@@ -32,7 +31,7 @@ const dispatch=useDispatch();
                 <strong>{price}</strong>
              </p>
         <div className="product__rating">
-            {Array(rating).fill().map((_, i) => (<p>🌟</p>))}
+            {Array(rating).fill().map((_, i) => ( <p key={i}>🌟</p>))}
         </div>
         </div>
         

@@ -1,7 +1,6 @@
 import React from 'react'
 import './CheckoutProduct.css'//1404
 import {useDispatch } from 'react-redux';
-// import { useStateValue } from "./StateProvider";
 
 
 const CheckoutProduct = ({ id, image, title, price, rating, hideButton }) => {
@@ -17,7 +16,6 @@ const CheckoutProduct = ({ id, image, title, price, rating, hideButton }) => {
     return (
     <div className="checkoutProduct">
           <img className='checkoutProduct__image' src={image} />
-
           <div className='checkoutProduct__info'>
                 <p className='checkoutProduct__title'>{title}</p>
                 <p className="checkoutProduct__price">

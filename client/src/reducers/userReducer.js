@@ -20,7 +20,7 @@ export const userLoginReducer = (state = { loading: true, userInfo: {isloggedIn:
 		case USER_LOGIN_REQUEST:
 			return { ...state, loading: true, userInfo: {isloggedIn:false,email:null}, error: null };
 		case USER_LOGIN_SUCCESS://
-				const {authtoken,email}=action.payload;
+				const {email}=action.payload;
 			return { ...state, loading: false, userInfo: {isloggedIn:true,email:email}, error: null };
 		case USER_LOGIN_FAIL:
 			return { ...state, loading: false, userInfo: {isloggedIn:false,email:null}, error: action.payload };

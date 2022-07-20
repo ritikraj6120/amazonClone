@@ -2,15 +2,13 @@ import React from 'react'
 import { useSelector } from 'react-redux';
 import './Checkout.css'
 import Subtotal from './Subtotal'
-// import { useStateValue } from "./StateProvider";
 import CheckoutProduct from "./CheckoutProduct";
 
 const Checkout = () => {
-  const userDetailsState = useSelector(state=>state.userDetails); 
-  const user= userDetailsState.user;
+  const userLoginState = useSelector(state=>state.userLogin); 
+  const user= userLoginState.userInfo;
   const orderState = useSelector(state=>state.orderState)
   const basket=orderState.basket;
-    // const [{ basket, user }] = useStateValue();
 
   return (
     <div className="checkout">
@@ -21,12 +19,12 @@ const Checkout = () => {
           alt=""
         />
         <div >
-            <h3>{user?.email}</h3>
+            <h3>{user.email}</h3>
             <h2 className="checkout__title"> Your Shopping Basket </h2>
 
             {basket.map(item => (
             <CheckoutProduct
-              id={item.id}
+              id={item._id}
               title={item.title}
               image={item.image}
               price={item.price}

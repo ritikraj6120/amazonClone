@@ -11,11 +11,10 @@ import User from './components/User';
 const AllRoutes = () => {
 	const dispatch = useDispatch();
 	let history=useHistory();
-	const userLoginState = useSelector(state => state.userLogin.userInfo.authtoken)
-	// const authtoken=userLoginState.userInfo.authtoken
-	console.log(userLoginState.userInfo.authtoken)
-	console.log(userLoginState)
-	const authtoken=userLoginState
+	const userLoginState = useSelector(state => state.userLogin)
+	const isloggedIn=userLoginState.userInfo.isloggedIn
+	// console.log(userLoginState)
+	// console.log(isloggedIn)
 	// useEffect(() => {
 	// 	if( userLoginState.userInfo===null){
 	// 		dispatch(handleLogout(history));
@@ -26,21 +25,21 @@ const AllRoutes = () => {
 		<Switch>
 			<Route exact path="/login">
 				{
-					authtoken ?
+					isloggedIn ?
 						<Redirect to="/"/> :
 						<Login />
 				}
 			</Route>
 			<Route exact path="/signup">
 				{
-					authtoken ?
+					isloggedIn ?
 						<Redirect to="/" /> :
 						<Signup />
 				}
 			</Route>
 			<Route exact path="/userdetail">
 			{
-				authtoken ?
+				isloggedIn ?
 					<>
 						<Header/>
 						<User />
@@ -52,7 +51,7 @@ const AllRoutes = () => {
 			</Route>
 			<Route path='/checkout'>
 			{
-				authtoken ?
+				isloggedIn ?
 						<>
 						<Header/>
 						<Checkout/>

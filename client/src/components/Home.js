@@ -28,7 +28,7 @@ const Home = () => {
 
          {
           itemsState.items.map((data) => {
-										return <Product key={data.id} data={data} />
+										return <Product key={data._id} data={data} />
 									})
 					}
 

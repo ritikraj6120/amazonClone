@@ -8,12 +8,12 @@ import {handleLogout} from '../actions/userAction.js'
 const Header = () => {
   const dispatch=useDispatch();
   let history=useHistory();
-  const userDetailsState = useSelector(state=>state.userDetails); 
-  const user= userDetailsState.user;
+  const userLoginState = useSelector(state=>state.userLogin); 
+  const {isloggedIn,email}= userLoginState.userInfo;
   const orderState = useSelector(state=>state.orderState)
   const basket=orderState.basket;
   const handleAuthenticaton = () => {
-    if (user) {
+    if (isloggedIn) {
       dispatch(handleLogout(history));
     }
   }
@@ -31,10 +31,10 @@ const Header = () => {
             <SearchIcon className="header_searchIcon"/>
         </div>
         <div className="header_nav">
-            <Link to ={!user && '/login'}>
+            <Link to ={!isloggedIn && '/login'}>
             <div className="header_option" onClick={handleAuthenticaton}>
-                <span className="header_optionLineOne">Hello {!user ? 'Guest' : user.email}</span>
-                <span className="header_optionLineTwo">{user ? 'Sign Out' : 'Sign In'}</span>
+                <span className="header_optionLineOne">Hello {!isloggedIn ? 'Guest' : email}</span>
+                <span className="header_optionLineTwo">{email ? 'Sign Out' : 'Sign In'}</span>
             </div>
 
             </Link>
@@ -51,7 +51,7 @@ const Header = () => {
             <Link to="/checkout">
                  <div className="header_optionBasket">
                   <ShoppingBasketIcon/>
-                  <span className="header_optionLineOne header_basketCount">{basket?.length}</span>
+                  <span className="header_optionLineOne header_basketCount">{basket.length}</span>
                 </div>
             </Link>
            
