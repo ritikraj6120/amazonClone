@@ -1,3 +1,4 @@
+import { Typography } from '@mui/material';
 import React from 'react'
 import { useDispatch } from 'react-redux';
 import './styles/Product.css'
@@ -25,19 +26,18 @@ const dispatch=useDispatch();
   return (
     <div className="product">
         <div className="product__info">
-             <p>{title}</p>
+             <Typography>{title}</Typography>
              <p className="product__price">
                 <small>Rs.</small>
                 <strong>{price}</strong>
              </p>
+				</div>
+				<img src={image}/>
         <div className="product__rating">
             {Array(rating).fill().map((_, i) => ( <p key={i}>🌟</p>))}
         </div>
-        </div>
-        
-
-    <img src={image}/>
-    <button onClick={addToBasket}>Add to basket</button>
+				
+    		<button onClick={addToBasket}>Add to basket</button>
     </div>
   )
 }

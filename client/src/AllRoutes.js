@@ -39,7 +39,7 @@ const AllRoutes = () => {
 						<Signup />
 				}
 			</Route>
-			<Route exact path="/userdetail">
+			<Route exact path="/account">
 			{
 				isloggedIn ?
 					<>

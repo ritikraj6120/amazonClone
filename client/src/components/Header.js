@@ -1,10 +1,12 @@
-import React from 'react'
+import React from 'react';
+import IconButton from '@mui/material/IconButton';
 import {useSelector,useDispatch} from 'react-redux';
 import { Link,useHistory } from 'react-router-dom';
 import './styles/Header.css'
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import {handleLogout} from '../actions/userAction.js'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 const Header = () => {
   const dispatch=useDispatch();
   let history=useHistory();
@@ -43,8 +45,11 @@ const Header = () => {
                 <span className="header_optionLineTwo">& Orders</span>
             </div>
             <div className="header_option">
-                <span className="header_optionLineOne"> Your</span>
-                <span className="header_optionLineTwo">Prime</span>
+							<Link to='/account'>
+								{/* <IconButton sx={{color:"white"}} onClick={}> */}
+										<AccountCircleIcon sx={{fontSize: "2vw",color:"white"}}/>
+								{/* </IconButton> */}
+								</Link>
             </div>
             <Link to="/checkout">
                  <div className="header_optionBasket">
