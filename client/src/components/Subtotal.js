@@ -5,7 +5,9 @@ import { getBasketTotal } from "../reducers/orderReducer.js";
 import CurrencyFormat from 'react-currency-format'
 import { Helmet } from "react-helmet";
 import {handlePayment} from './Payment.js'
+import { useHistory } from 'react-router-dom';
 const Subtotal = () => {
+  let history=useHistory();
 	const orderState = useSelector(state=>state.orderState)
   const basket=orderState.basket;
   return (
@@ -29,7 +31,7 @@ const Subtotal = () => {
         prefix={"Rs"}
       />
 
-       <button onClick={(e)=>handlePayment(e,getBasketTotal(basket),basket)}>Proceed to Checkout</button>
+       <button onClick={(e)=>handlePayment(e,getBasketTotal(basket),basket,history)}>Proceed to Checkout</button>
 			 <Helmet>
 				<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 			</Helmet>

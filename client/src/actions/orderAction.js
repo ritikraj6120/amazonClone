@@ -12,7 +12,7 @@ export const fetchItems = () => async (dispatch) => {
 		dispatch({
 			type: Items_GET_REQUEST,
 		});
-		const response = await fetch(`/fetchitems`, {
+		const response = await fetch(`${host}/fetchitems`, {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json'

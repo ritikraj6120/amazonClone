@@ -8,6 +8,7 @@ import Home from './components/Home';
 import Header from './components/Header';
 import Checkout from './components/Checkout';
 import User from './components/User';
+import Summary from "./components/Summary";
 const AllRoutes = () => {
 	const dispatch = useDispatch();
 	let history=useHistory();
@@ -60,7 +61,7 @@ const AllRoutes = () => {
 						<Redirect to="/login" />
 				}				
 			</Route>
-			<Route path="/summary/:id">
+			<Route path="/summary/:orderId">
 			{
 				isloggedIn ?
 						<>
