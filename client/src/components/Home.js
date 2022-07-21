@@ -2,7 +2,7 @@ import React from 'react'
 import { useEffect } from 'react'
 import { fetchItems } from '../actions/orderAction'
 import { useDispatch, useSelector } from 'react-redux';
-import './Home.css'
+import './styles/Home.css'
 import Product from './Product'
 const Home = () => {
   const dispatch = useDispatch();

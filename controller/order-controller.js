@@ -12,9 +12,9 @@ const razorpay = new Razorpay({
 
 
 const orders = async (req,res)=>{
-
+	// return res.json("sucess");
 	const payment_capture = 1;
-	const amount = req.body.val;
+	const amount = req.body.amount;
 	const currency = "INR";
 
 	const options = {
@@ -57,11 +57,26 @@ const fetchSuccessfullOrders= async (req, res) => {
 };
 
 const paymentVerification = async (req,res)=>{
-	console.log(req);
-	try{
-
-	}catch(err){
-
-	}
+		// do a validation
+		// const secret = '12345678'
+	
+		// console.log(req.body)
+	
+		// const crypto = require('crypto')
+	
+		// const shasum = crypto.createHmac('sha256', secret)
+		// shasum.update(JSON.stringify(req.body))
+		// const digest = shasum.digest('hex')
+	
+		// console.log(digest, req.headers['x-razorpay-signature'])
+	
+		// if (digest === req.headers['x-razorpay-signature']) {
+		// 	console.log('request is legit')
+		// 	// process it
+		// 	require('fs').writeFileSync('payment1.json', JSON.stringify(req.body, null, 4))
+		// } else {
+		// 	// pass it
+		// }
+		// res.json({ status: 'ok' })
 }
 module.exports={orders,fetchSuccessfullOrders,paymentVerification}

@@ -1,10 +1,12 @@
 import React from 'react'
-import './Subtotal.css'
+import './styles/Subtotal.css'
 import {useSelector} from "react-redux";
 import { getBasketTotal } from "../reducers/orderReducer.js";
 import CurrencyFormat from 'react-currency-format'
+import { Helmet } from "react-helmet";
+import {handlePayment} from './Payment.js'
 const Subtotal = () => {
-  const orderState = useSelector(state=>state.orderState)
+	const orderState = useSelector(state=>state.orderState)
   const basket=orderState.basket;
   return (
     <div className="subtotal">
@@ -13,7 +15,7 @@ const Subtotal = () => {
           <>
             <p>
             
-              Subtotal ({basket.length} items): <strong>{value}</strong>
+              Subtotal ({basket.length} items): <strong>{ value}</strong>
             </p>
             <small className="subtotal__gift">
               <input type="checkbox" /> This order contains a gift
@@ -24,11 +26,13 @@ const Subtotal = () => {
         value= {getBasketTotal(basket)}
         displayType={"text"}
         thousandSeparator={true}
-        prefix={"$"}
+        prefix={"Rs"}
       />
 
-       <button onClick="">Proceed to Checkout</button>
-    
+       <button onClick={(e)=>handlePayment(e,getBasketTotal(basket),basket)}>Proceed to Checkout</button>
+			 <Helmet>
+				<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+			</Helmet>
     </div>
   )
 }

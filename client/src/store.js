@@ -10,7 +10,7 @@ const isloggedIn = localStorage.getItem("token")
 	: false;
 
 const initialState = {
-	userLogin: { userInfo: {isloggedIn:isloggedIn,email:email} },
+	userLogin: { userInfo: {isloggedIn:true,email:email} },
 };
 const store = createStore(rootReducer,
 	initialState,

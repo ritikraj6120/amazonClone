@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
-import './Checkout.css'
+import './styles/Checkout.css'
 import Subtotal from './Subtotal'
 import CheckoutProduct from "./CheckoutProduct";
 
@@ -23,8 +23,8 @@ const Checkout = () => {
             <h2 className="checkout__title"> Your Shopping Basket </h2>
 
             {basket.map(item => (
-            <CheckoutProduct
-              id={item._id}
+            <CheckoutProduct key={item.id}
+              id={item.id}
               title={item.title}
               image={item.image}
               price={item.price}

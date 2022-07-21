@@ -1,7 +1,7 @@
 import React from 'react'
 import {useSelector,useDispatch} from 'react-redux';
 import { Link,useHistory } from 'react-router-dom';
-import './Header.css'
+import './styles/Header.css'
 import SearchIcon from '@mui/icons-material/Search';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
 import {handleLogout} from '../actions/userAction.js'
@@ -31,15 +31,13 @@ const Header = () => {
             <SearchIcon className="header_searchIcon"/>
         </div>
         <div className="header_nav">
-            <Link to ={!isloggedIn && '/login'}>
+            <Link to ={{pathname: !isloggedIn ? '/login':'/userdetail'}}>
             <div className="header_option" onClick={handleAuthenticaton}>
                 <span className="header_optionLineOne">Hello {!isloggedIn ? 'Guest' : email}</span>
                 <span className="header_optionLineTwo">{email ? 'Sign Out' : 'Sign In'}</span>
             </div>
 
             </Link>
-         
-
             <div className="header_option">
                 <span className="header_optionLineOne"> Returns</span>
                 <span className="header_optionLineTwo">& Orders</span>

@@ -1,5 +1,5 @@
 import React from 'react'
-import './CheckoutProduct.css'//1404
+import './styles/CheckoutProduct.css'//1404
 import {useDispatch } from 'react-redux';
 
 
@@ -26,7 +26,7 @@ const CheckoutProduct = ({ id, image, title, price, rating, hideButton }) => {
                     {Array(rating)
                     .fill()
                     .map((_, i) => (
-                        <p>🌟</p>
+                        <p key={i}>🌟</p>
                     ))}
                 </div>
                 {!hideButton && (

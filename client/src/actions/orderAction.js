@@ -20,7 +20,6 @@ export const fetchItems = () => async (dispatch) => {
 		});
 		const json = await response.json()
 		if (response.status === 200) {
-			
 			dispatch({
 				type: Items_GET_SUCCESS,
 				payload: json,

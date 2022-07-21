@@ -13,6 +13,7 @@ const AllRoutes = () => {
 	let history=useHistory();
 	const userLoginState = useSelector(state => state.userLogin)
 	const isloggedIn=userLoginState.userInfo.isloggedIn
+	console.log(isloggedIn)
 	// console.log(userLoginState)
 	// console.log(isloggedIn)
 	// useEffect(() => {
@@ -58,6 +59,16 @@ const AllRoutes = () => {
 						</>	 :
 						<Redirect to="/login" />
 				}				
+			</Route>
+			<Route path="/summary/:id">
+			{
+				isloggedIn ?
+						<>
+						<Header/>
+						<Summary/>
+						</>	 :
+						<Redirect to="/login" />
+			}
 			</Route>
 			<Route path='/'>
 					<Header/>
