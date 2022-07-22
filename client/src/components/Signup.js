@@ -48,11 +48,11 @@ const Signup = () => {
             <h1>Sign Up</h1>
             <form action='' method='post'>
                 <h5>Name</h5>
-                <input type="text" value={name} onChange = {e => setname(e.target.value)}/>
+                <input type="text" value={name} onChange = {e => setname(e.target.value)} autoComplete = "off"/>
                 <h5>E-mail</h5>
-                <input type="text" value={email} onChange = {e => setemail(e.target.value)}/>
+                <input type="text" value={email} onChange = {e => setemail(e.target.value)} autoComplete = "off"/>
                 <h5>Password</h5>
-                <input type="password"  value={password} onChange = {e => setpassword(e.target.value)}/>
+                <input type="password"  value={password} onChange = {e => setpassword(e.target.value)} autoComplete = "off"/>
                 <button className="login__signInButton " type='submit' onClick={signUp}>Sign UP</button>
             </form>
 						<div className="login__signUp login__signIn">							

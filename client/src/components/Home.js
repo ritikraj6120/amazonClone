@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect } from "react";
 import { fetchItems } from "../actions/orderAction";
 import { useDispatch, useSelector } from "react-redux";
+import Carousel from "./Carousel";
 import "./styles/Home.css";
 import Product from "./Product";
 const Home = () => {
@@ -18,11 +19,11 @@ const Home = () => {
             ) : (
                 <div className="home">
                     <div className="home__container">
-                        <img
+                        {/* <img
                             className="home__image"
                             src="https://images-eu.ssl-images-amazon.com/images/G/02/digital/video/merch2016/Hero/Covid19/Generic/GWBleedingHero_ENG_COVIDUPDATE__XSite_1500x600_PV_en-GB._CB428684220_.jpg"
-                        />
-
+                        /> */}
+                            <Carousel/>
                         <div className="home__row">
                             <div className="container-fluid div-7 mt-5 mb-5">
                                 <div className="row">

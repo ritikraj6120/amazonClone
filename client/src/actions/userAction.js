@@ -41,8 +41,10 @@ export const login = (user, history) => async (dispatch) => {
 				type: USER_LOGIN_SUCCESS,
 				payload: {email:json.email}
 			});
+			
 			localStorage.setItem('email',json.email);
 			notifySuccess("Successfully logged in")
+			console.log(response)
 			history.push("/");
 		}
 		else if (response.status === 400) {
