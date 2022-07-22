@@ -14,7 +14,7 @@ import {
 	USER_UPDATE_PROFILE_REQUEST,
 	USER_UPDATE_PROFILE_SUCCESS
 } from "../constants/userConstant";
-import {getCookie,removeCookie} from '../Cookies/Cookie'
+import {getCookie,removeCookie,setCookie} from '../Cookies/Cookie'
 import { notifyError, notifySuccess, notifyUnAuthorized, notifyWarning } from '../alert';
 import {useHistory} from 'react-router-dom'
 // const host = "https://khatabook-app.herokuapp.com"
@@ -28,6 +28,8 @@ export const login = (user, history) => async (dispatch) => {
 		});
 		const response = await fetch(`${host}/signin`, {
 			method: 'POST',
+			credentials: 'include',
+			withCredentials : true,
 			headers: {
 				'Content-Type': 'application/json'
 			},
@@ -37,11 +39,13 @@ export const login = (user, history) => async (dispatch) => {
 		if (response.status === 200) {
 			// Save the auth token and redirect
 			// localStorage.setItem('token', json.authtoken);
+			setCookie('token',json.token)
+			localStorage.setItem('email',json.email);
+			localStorage.setItem('userName',json.userName);		
 			dispatch({
 				type: USER_LOGIN_SUCCESS,
-				payload: {email:json.email}
-			});
-			localStorage.setItem('email',json.email);
+				payload: {email:json.email,userName:json.userName}
+			});			
 			notifySuccess("Successfully logged in")
 			history.push("/");
 		}
@@ -72,6 +76,7 @@ export const login = (user, history) => async (dispatch) => {
 export const handleLogout = (history) => (dispatch) => {
 	removeCookie('token');
 	localStorage.removeItem('email');
+	localStorage.removeItem('userName');
 	dispatch({ type: USER_LOGOUT });
 	dispatch({ type: USER_DETAILS_RESET });
 	history.push('/login')

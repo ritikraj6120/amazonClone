@@ -15,17 +15,17 @@ import {
 	USER_UPDATE_PROFILE_SUCCESS
 } from "../constants/userConstant";
 
-export const userLoginReducer = (state = { loading: false, userInfo: {isloggedIn:true,email:null}, error: null }, action) => {
+export const userLoginReducer = (state = { loading: false, userInfo: {isloggedIn:false,email:null,userName:null}, error: null }, action) => {
 	switch (action.type) {
 		case USER_LOGIN_REQUEST:
-			return { ...state, loading: true, userInfo: {isloggedIn:false,email:null}, error: null };
+			return { ...state, loading: true, userInfo: {isloggedIn:false,email:null,userName:null}, error: null };
 		case USER_LOGIN_SUCCESS://
-				const {email}=action.payload;
-			return { ...state, loading: false, userInfo: {isloggedIn:true,email:email}, error: null };
+				const {email,userName}=action.payload;
+			return { ...state, loading: false, userInfo: {isloggedIn:true,email:email,userName:userName}, error: null };
 		case USER_LOGIN_FAIL:
-			return { ...state, loading: false, userInfo: {isloggedIn:false,email:null}, error: action.payload };
+			return { ...state, loading: false, userInfo: {isloggedIn:false,email:null,userName:null}, error: action.payload };
 		case USER_LOGOUT:
-			return { ...state, loading: false, userInfo: {isloggedIn:false,email:null}, error: null };
+			return { ...state, loading: false, userInfo: {isloggedIn:false,email:null,userName:null}, error: null };
 		default:
 			return state;
 	}
