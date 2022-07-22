@@ -2,15 +2,18 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import { applyMiddleware, createStore } from "redux"
 import thunk from "redux-thunk"
 import rootReducer from "./reducers/rootReducer.js";
-const isloggedIn = localStorage.getItem("token")
-	? true
-	: false;
-	const email=localStorage.getItem("email")
+import {getCookie} from './Cookies/Cookie'
+const isloggedIn = getCookie('token')
 	? true
 	: false;
 
+	console.log("isloggedIn is ",isloggedIn)
+	const email=localStorage.getItem("email")
+	? localStorage.getItem("email")
+	: null;
+
 const initialState = {
-	userLogin: { userInfo: {isloggedIn:true,email:email} },
+	userLogin: { userInfo: {isloggedIn:isloggedIn,email:email} },
 };
 const store = createStore(rootReducer,
 	initialState,

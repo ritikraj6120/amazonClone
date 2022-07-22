@@ -33,11 +33,11 @@ const AllRoutes = () => {
 				}
 			</Route>
 			<Route exact path="/signup">
-				{
-					isloggedIn ?
-						<Redirect to="/" /> :
-						<Signup />
-				}
+			{
+				isloggedIn ?
+					<Redirect to="/" /> :
+					<Signup />
+			}
 			</Route>
 			<Route exact path="/account">
 			{

@@ -3,7 +3,6 @@ import {
 	Items_GET_SUCCESS,
 	Items_GET_FAIL
 } from "../constants/orderConstant";
-import { notifyError, notifySuccess, notifyUnAuthorized, notifyWarning } from '../alert';
 
 const host ="http://localhost:5000"
 

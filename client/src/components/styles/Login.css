@@ -64,5 +64,23 @@
     margin-top: 10px;
     border-color: darkgray;
   }
+
+	.login__signUp{
+		width:90%;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: flex-end;
+		margin: 16px 0;
+		text-decoration: none;
+	}
+
+	.login__signIn{
+		justify-content: flex-end;
+	}
   
+	.login__signUp a{
+		text-decoration: none;
+		color:#0e58f1
+	}
   

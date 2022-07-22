@@ -57,15 +57,15 @@ const signIn= async (req, res) => {
 				success = false
 				return res.status(400).json({ success, error: "The e-mail address and/or password you specified are not correct." });
 			}
-			// console.log(user._id);
+			success = true;
 			const data= {
 					_id: user._id
 				}
 		
 			const authtoken = jwt.sign(data, process.env.JWT_SECRET);
-			success = true;
-			return res.status(200).json({ success, authtoken,email:user.email });
-
+			const maxAge=3*24*60*60
+			res.cookie('token', authtoken, { httpOnly: true, maxAge: maxAge * 1000 });
+			return res.status(200).json({email:user.email });
 		} catch (error) {
 			console.error(error.message);
 			res.status(500).json({ success: false, error: "Internal Server Error" });
@@ -73,7 +73,6 @@ const signIn= async (req, res) => {
 	};
 
 	// changePassword,userDetails
-
 	const changePassword =async (req,res)=>{
 		try {
 			let { currentPassword, newPassword } = req.body;

@@ -14,9 +14,9 @@ import {
 	USER_UPDATE_PROFILE_REQUEST,
 	USER_UPDATE_PROFILE_SUCCESS
 } from "../constants/userConstant";
+import {getCookie,removeCookie} from '../Cookies/Cookie'
 import { notifyError, notifySuccess, notifyUnAuthorized, notifyWarning } from '../alert';
-
-
+import {useHistory} from 'react-router-dom'
 // const host = "https://khatabook-app.herokuapp.com"
 // const host = "https://khatabook-app6120.herokuapp.com"
 const host ="http://localhost:5000"
@@ -36,11 +36,12 @@ export const login = (user, history) => async (dispatch) => {
 		const json = await response.json()
 		if (response.status === 200) {
 			// Save the auth token and redirect
-			localStorage.setItem('token', json.authtoken);
+			// localStorage.setItem('token', json.authtoken);
 			dispatch({
 				type: USER_LOGIN_SUCCESS,
-				payload: {authtoken:json.authtoken,email:json.email}
+				payload: {email:json.email}
 			});
+			localStorage.setItem('email',json.email);
 			notifySuccess("Successfully logged in")
 			history.push("/");
 		}
@@ -69,7 +70,8 @@ export const login = (user, history) => async (dispatch) => {
 };
 
 export const handleLogout = (history) => (dispatch) => {
-	localStorage.clear();
+	removeCookie('token');
+	localStorage.removeItem('email');
 	dispatch({ type: USER_LOGOUT });
 	dispatch({ type: USER_DETAILS_RESET });
 	history.push('/login')
@@ -129,6 +131,7 @@ export const signup = (user, history) => async (dispatch) => {
 };
 
 export const getUserDetails = () => async (dispatch, getState) => {
+	let history=useHistory();
 	try {
 		dispatch({
 			type: USER_DETAILS_REQUEST,
@@ -138,7 +141,7 @@ export const getUserDetails = () => async (dispatch, getState) => {
 			method: 'GET',
 			headers: {
 				'Content-Type': 'application/json',
-				"auth-token": localStorage.getItem('token')
+				"auth-token": getCookie('token')
 			}
 		});
 		const json = await response.json()
@@ -150,7 +153,7 @@ export const getUserDetails = () => async (dispatch, getState) => {
 		}
 		else if (response.status === 401) {
 			notifyError("Not authorized");
-			dispatch(handleLogout());
+			dispatch(handleLogout(history));
 		}
 		else {
 			dispatch({
@@ -168,6 +171,7 @@ export const getUserDetails = () => async (dispatch, getState) => {
 };
 
 export const changePassword = (user) => async (dispatch, getState) => {
+	let history=useHistory();
 	try {
 		dispatch({
 			type: USER_UPDATE_PROFILE_REQUEST,
@@ -176,7 +180,7 @@ export const changePassword = (user) => async (dispatch, getState) => {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
-				"auth-token": localStorage.getItem('token')
+				"auth-token": getCookie('token')
 			},
 			body: JSON.stringify(user)
 		});
@@ -199,7 +203,7 @@ export const changePassword = (user) => async (dispatch, getState) => {
 				type: USER_UPDATE_PROFILE_FAIL,
 				payload: "Not Authorized"
 			});
-			dispatch(handleLogout());
+			dispatch(handleLogout(history));
 		}
 		else {
 			dispatch({

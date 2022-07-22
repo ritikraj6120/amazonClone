@@ -51,6 +51,14 @@ const Login = () => {
                 <input type="password"  value={password} onChange = {e => setpassword(e.target.value)}/>
                 <button className="login__signInButton " type='submit' onClick={signIn}>Sign IN</button>
             </form>
+						<div className="login__signUp">
+							<Link to="/passwordreset">
+								Forget Password?
+							</Link>
+							<Link to="/signup">
+								Sign Up
+							</Link>
+					</div>
             <p>
             By signing-in you agree to the AMAZON Conditions of Use & Sale. Please
                     see our Privacy Notice, our Cookies Notice and our Interest-Based Ads Notice.
