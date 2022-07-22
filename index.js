@@ -12,8 +12,15 @@ var port = process.env.PORT || 5000
 // 	next();
 // });
 app.use(cors({
-	origin:'http://localhost:3000'
+	credentials: true, 
+	origin:'http://localhost:3000',
+
 }));
+
+// const corsOptions = {
+// 	origin: true, //included origin as true
+// 	credentials: true, //included credentials as true
+// };
 app.use(express.json())
 // Available Routes
 app.use('/', require('./router/auth'));

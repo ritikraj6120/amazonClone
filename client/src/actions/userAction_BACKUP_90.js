@@ -45,7 +45,7 @@ export const login = (user, history) => async (dispatch) => {
 			dispatch({
 				type: USER_LOGIN_SUCCESS,
 				payload: {email:json.email,userName:json.userName}
-			});			
+			});
 			notifySuccess("Successfully logged in")
 			console.log(response)
 			history.push("/");

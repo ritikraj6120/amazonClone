@@ -61,11 +61,12 @@ const signIn= async (req, res) => {
 			const data= {
 					_id: user._id
 				}
-		
-			const authtoken = jwt.sign(data, process.env.JWT_SECRET);
 			const maxAge=3*24*60*60
-			res.cookie('token', authtoken, { httpOnly: true, maxAge: maxAge * 1000 });
-			return res.status(200).json({email:user.email });
+			const authtoken = jwt.sign(data, process.env.JWT_SECRET,{
+				expiresIn: maxAge
+			});			
+			// res.cookie('token', authtoken, {domain: 'localhost:3000', path: '/', maxAge: maxAge * 1000 });
+			return res.status(200).json({token:authtoken,email:user.email,userName:user.name });
 		} catch (error) {
 			console.error(error.message);
 			res.status(500).json({ success: false, error: "Internal Server Error" });

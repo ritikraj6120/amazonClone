@@ -11,9 +11,10 @@ const isloggedIn = getCookie('token')
 	const email=localStorage.getItem("email")
 	? localStorage.getItem("email")
 	: null;
+	const userName=localStorage.getItem('userName');	
 
 const initialState = {
-	userLogin: { userInfo: {isloggedIn:isloggedIn,email:email} },
+	userLogin: { userInfo: {isloggedIn:isloggedIn,email:email.at,userName:userName} },
 };
 const store = createStore(rootReducer,
 	initialState,
