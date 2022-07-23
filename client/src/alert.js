@@ -11,9 +11,9 @@ const notifyError = (x) => {
 		position: "top-right",
 	});
 }
-const notifyWarning = (x) => {
+const notifyWarning = (x,timing=2000) => {
 	toast.warn(x, {
-		autoClose: 2000,
+		autoClose: timing,
 		position: "top-center",
 	})
 }

@@ -129,28 +129,34 @@ const User = () => {
                       </div>
                     </div>
                     <hr />
-                    <div className="row">
+                    <div className="row ">
                       <div className="col-sm-3">
                         <p className="mb-0">Phone</p>
                       </div>
+        
                       <div className="col-sm-9">
 											{
 													togglePhone === false ?
-													<>
+													< div className="flex">
 														<p className="text-muted mb-0">{user.phone===undefined? 'Your Phone':user.phone}</p>
 														<Button onClick={handleTogglePhone} >Edit</Button>
-													</>
+													</div>
 													: 
 													<form>
 															<input type="text" className="form-control " placeholder="Add Phone" value={addPhone} onChange={(e) => {
 																setAddPhone(e.target.value);
 															} } />
-															<span className="text__danger" style={{color:"red"}}>{errorState}</span>
-															<Button onClick={handleAddPhone}>Save</Button>
-															<Button onClick={handleCancelToggle}>Cancel</Button>
+															<span  style={{color:"red"}}>{errorState}</span>
+                              
+                              <div className="form__button">
+                                <Button onClick={handleAddPhone} size="small" variant="contained">Save</Button>
+                                <Button onClick={handleCancelToggle} size="small" variant="contained" sx={{ml:2,color:'#100F0F',backgroundColor:'#A5C9CA', '&:hover':{backgroundColor:'#A5C9CA'}}}>
+                                  Cancel
+                                </Button>
+                              </div>
 													</form>
 										}
-										</div>
+                    </div>
                     </div>
                     <hr />
                     <div className="row">
@@ -160,22 +166,25 @@ const User = () => {
                       <div className="col-sm-9">
 											{
 													toggleAddress === false ?
-													<>
+													<div className="flex">
 													<p className="text-muted mb-0"> {user.address===undefined?'Your Address':user.address}</p>
 														<Button onClick={(e) => {
 															handleToggleAddress(true);
 														}} >Edit</Button>
-													</>
+													</div>
 													: 
+                          
 													<form>
-															<input type="text" className="form-control " placeholder="Add Phone" value={addAddress} onChange={(e) => {
+															<input type="text" className="form-control " placeholder="Add Address" value={addAddress} onChange={(e) => {
 																setAddAddress(e.target.value);
 															} } />
-															<span className="text__danger" style={{color:"red"}}>{errorState}</span>
-															<Button onClick={handleAddAddress}>Save</Button>
-															<Button onClick={handleCancelToggle}>Cancel</Button>
-													</form>
-
+															<span style={{color:"red"}}>{errorState}</span>
+                              <div className="form__button">
+                                <Button onClick={handleAddAddress} size="small" variant="contained" >Save</Button>
+                                <Button onClick={handleCancelToggle} size="small"  sx={{color:'#100F0F',ml:2,backgroundColor:'#A5C9CA', '&:hover':{backgroundColor:'#A5C9CA'}}}>Cancel</Button>
+                              </div>
+                          </form>
+                              
 											}
                       </div>
                     </div>

@@ -4,6 +4,7 @@ import { Link, useHistory } from "react-router-dom";
 import {useState} from 'react'
 import { useDispatch} from 'react-redux'
 import { signup } from '../actions/userAction.js';
+import {notifyWarning} from '../alert'
 //import { auth } from './firebase'
 const Signup = () => {
     let history = useHistory()
@@ -13,6 +14,20 @@ const Signup = () => {
     const [password,setpassword] = useState('')
     const signUp = e => {
         e.preventDefault();
+        if(name.length<1){
+            notifyWarning("Name is required")
+            return
+        }
+        if(!/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(email))
+        {
+            notifyWarning("Invalid E-mail")
+            return
+        }
+        if(!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(password))
+        {
+            notifyWarning("Password must be Minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character",4000)
+            return
+        }
         const user = {
             name:name,
 			email: email,

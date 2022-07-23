@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect,  } from "react";
 import { useParams, useHistory, useLocation } from "react-router-dom";
-import { CircularProgress, Box } from "@mui/material";
+import { CircularProgress, Box, Typography } from "@mui/material";
 import SummaryProduct from "./SummaryProduct";
 import { orderSummary } from "../actions/orderAction";
 import { useDispatch, useSelector } from "react-redux";
@@ -27,7 +27,9 @@ const Summary = () => {
         </Box>
        : 
        <>
-       <h1>Your Orders</h1>
+       <Typography variant="h5" component="div" sx={{display:"flex",justifyContent:"center",fontWeight:'bold',margin:"5vh auto"}}>
+          Your Order Summary
+        </Typography>
         
         { 
         summaryDetails.map((item) => (
