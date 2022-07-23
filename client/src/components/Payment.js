@@ -1,10 +1,12 @@
 
+import { getCookie } from "../Cookies/Cookie";
 const verifyPayment=async(response,history)=>{
 	const response2 = await fetch('http://localhost:5000/verifypayment', {
 		method: 'POST',
 		mode: 'cors',
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			"auth-token": getCookie('token')
 		},
 		body: JSON.stringify(response)
 	});
@@ -57,7 +59,8 @@ export const handlePayment = async (event,money,items,history) => {
 		method: 'POST',
 		mode: 'cors',
 		headers: {
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			"auth-token": getCookie('token')
 		},
 		body: JSON.stringify(amount_details)
 	});

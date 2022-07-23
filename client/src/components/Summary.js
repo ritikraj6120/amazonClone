@@ -1,50 +1,27 @@
 import React from "react";
-import { useEffect, useState } from "react";
-import { useParams, useHistory } from "react-router-dom";
+import { useEffect,  } from "react";
+import { useParams, useHistory, useLocation } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
 import SummaryProduct from "./SummaryProduct";
+import { orderSummary } from "../actions/orderAction";
+import { useDispatch, useSelector } from "react-redux";
 const Summary = () => {
-  let history = useHistory();
-  const [orderState, setOrderState] = useState({
-    loading: true,
-    error: null,
-    orderDetails: [],
-  });
+  let history=useHistory();
+  let location=useLocation()
+  const dispatch=useDispatch();
+  const summaryState=useSelector(state=>state.summaryState);
+ const {loading,error,summaryDetails}=summaryState
   let { orderId } = useParams();
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await fetch(
-        `http://localhost:5000/fetchorders/${orderId}`,
-        {
-          method: "GET",
-          mode: "cors",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      // console.log(response)
-      if (response.status === 200) {
-        const data = await response.json();
-        setOrderState({
-          loading: false,
-          error: null,
-          orderDetails: data,
-        });
-      } else if (response.status === 400) {
-        history.push("/");
-      } else {
-        history.push("/");
-      }
-    }
-    fetchData();
-  }, []);
+    dispatch(orderSummary(orderId,history))
+  }, [location])
+  
 
   return (
     <>
       {
-      (orderState.loading || orderState.error) ? 
+      (loading || error) ? 
         <Box sx={{ display: "flex" }}>
           <CircularProgress />
         </Box>
@@ -53,7 +30,7 @@ const Summary = () => {
        <h1>Your Orders</h1>
         
         { 
-        orderState.orderDetails.map((item) => (
+        summaryDetails.map((item) => (
            <SummaryProduct key={item._id}
               id={item._id}
               title={item.title}

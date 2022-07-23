@@ -1,6 +1,7 @@
-import { Typography } from '@mui/material';
+import { Typography ,Box} from '@mui/material';
 import React from 'react'
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import './styles/Product.css'
 const Product = ({data}) => {
 const  {_id,title,image,price,rating}=data
@@ -26,7 +27,10 @@ const dispatch=useDispatch();
   return (
     <div className="product">
         <div className="product__info">
-             <Typography>{title}</Typography>
+          <Link to={`/product/${_id}`}  style={{textDecoration:"none"}}> 
+          <Typography  >{title}</Typography>
+          </Link>
+             
              <p className="product__price">
                 <small>Rs.</small>
                 <strong>{price}</strong>
@@ -34,7 +38,8 @@ const dispatch=useDispatch();
 				</div>
 				<img src={image}/>
         <div className="product__rating">
-            {Array(rating).fill().map((_, i) => ( <p key={i}>🌟</p>))}
+        {Array(rating).fill().map((_, i) => ( <span key={i} className="fa fa-star checked"></span>))}
+              { Array(5-rating).fill().map((_, i) => ( <span key={i} className="fa fa-star"></span>)) }
         </div>
 				
     		<button onClick={addToBasket}>Add to basket</button>

@@ -2,7 +2,6 @@ const Orders = require("../models/Order");
 const Items = require("../models/Items");
 const shortid = require("shortid");
 const Razorpay = require("razorpay");
-const { findById } = require("../models/Order");
 const { KEY_ID, KEY_SECRET } = process.env;
 const crypto = require("crypto");
 
@@ -17,10 +16,15 @@ const orders = async (req, res) => {
   // return res.json("sucess");
   const payment_capture = 1;
   const amount = req.body.amount;
+  let z=amount*100;
+  z=Math.floor( z );
+  console.log("z is",z);
+  console.log(amount)
+  console.log(typeof amount)
   const currency = "INR";
 
   const options = {
-    amount: amount * 100,
+    amount: z,
     currency,
     receipt: shortid.generate(),
     payment_capture,
@@ -36,7 +40,7 @@ const orders = async (req, res) => {
       status: response.status,
       items: req.body.items,
     });
-    console.log(response);
+    // console.log("response is ",response);
     res.status(200).json({
       id: response.id,
       currency: response.currency,
@@ -109,7 +113,7 @@ const fetchSuccessfullOrders = async (req, res) => {
       order_id: req.params.id,
     }).exec();
     let itemsArray = successfullOrders.items;
-    // console.log(itemsArray)
+    // console.log(successfullOrders)
 
     itemsArray.map(async (id) => {
       const singleItem = await Items.findById(id);
@@ -127,4 +131,23 @@ const fetchSuccessfullOrders = async (req, res) => {
   }
 };
 
-module.exports = { orders, fetchSuccessfullOrders, paymentVerification };
+
+const fetchProductById = async (req, res) => {
+  try {
+    // console.log(req.params.id)
+    let successfullOrders = await Items.findById({
+      _id: req.params.id,
+    }).exec();
+    // console.log(successfullOrders)
+    return res.status(200).json(successfullOrders);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Internal Server Error");
+  }
+};
+
+
+
+
+
+module.exports = { orders, fetchSuccessfullOrders, paymentVerification ,fetchProductById};

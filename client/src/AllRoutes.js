@@ -9,6 +9,7 @@ import Header from './components/Header';
 import Checkout from './components/Checkout';
 import User from './components/User';
 import Summary from "./components/Summary";
+import SingleProduct from "./components/SingleProduct.js";
 const AllRoutes = () => {
 	const dispatch = useDispatch();
 	let history=useHistory();
@@ -51,7 +52,7 @@ const AllRoutes = () => {
 				}
 				
 			</Route>
-			<Route path='/checkout'>
+			<Route exact path='/checkout'>
 			{
 				isloggedIn ?
 						<>
@@ -61,7 +62,7 @@ const AllRoutes = () => {
 						<Redirect to="/login" />
 				}				
 			</Route>
-			<Route path="/summary/:orderId">
+			<Route exact path="/summary/:orderId">
 			{
 				isloggedIn ?
 						<>
@@ -71,9 +72,13 @@ const AllRoutes = () => {
 						<Redirect to="/login" />
 			}
 			</Route>
-			<Route path='/'>
+			<Route exact path='/'>
 					<Header/>
 					<Home/>						
+			</Route>
+			<Route exact path="/product/:productId">
+				<Header/>
+				<SingleProduct/>
 			</Route>
 		</Switch>
 	);

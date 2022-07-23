@@ -7,7 +7,9 @@ import {
 	userUpdateProfileReducer
 } from "./userReducer";
 import{orderReducer,
-	fetchItemsReducer
+	fetchItemsReducer,
+	fetchItemsByIdReducer,
+	summaryReducer
 } from './orderReducer'
 
 const rootReducer = combineReducers({
@@ -16,7 +18,9 @@ const rootReducer = combineReducers({
 	userDetails: userDetailsReducer,
 	userUpdateProfile: userUpdateProfileReducer,
 	orderState:orderReducer,
-	fetchItems:fetchItemsReducer
+	fetchItems:fetchItemsReducer,
+	fetchItemsById:fetchItemsByIdReducer,
+	summaryState:summaryReducer
 });
 
 export default rootReducer;

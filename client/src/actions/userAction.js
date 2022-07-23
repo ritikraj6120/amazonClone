@@ -136,8 +136,7 @@ export const signup = (user, history) => async (dispatch) => {
 	}
 };
 
-export const getUserDetails = () => async (dispatch, getState) => {
-	let history=useHistory();
+export const getUserDetails = (history) => async (dispatch, getState) => {
 	try {
 		dispatch({
 			type: USER_DETAILS_REQUEST,
@@ -176,8 +175,7 @@ export const getUserDetails = () => async (dispatch, getState) => {
 	}
 };
 
-export const changePassword = (user) => async (dispatch, getState) => {
-	let history=useHistory();
+export const changePassword = (user,history) => async (dispatch, getState) => {
 	try {
 		dispatch({
 			type: USER_UPDATE_PROFILE_REQUEST,

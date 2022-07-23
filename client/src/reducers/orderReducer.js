@@ -5,6 +5,12 @@ import {
 	Items_GET_REQUEST,
 	Items_GET_SUCCESS,
 	Items_GET_FAIL,
+	PRODUCT_BY_ID_GET_REQUEST,
+	PRODUCT_BY_ID_GET_SUCCESS,
+	PRODUCT_BY_ID_GET_FAIL,
+	SUMMARY_OF_ORDER_REQUEST,
+	SUMMARY_OF_ORDER_SUCCESS,
+	SUMMARY_OF_ORDER_FAIL,
 } from "../constants/orderConstant";
 
 
@@ -62,6 +68,38 @@ export const orderReducer = (state = {basket: [] }, action) => {
 	}
 };
 
+export const summaryReducer = (state = {loading:true,error:null,summaryDetails: [] }, action) => {
+	switch (action.type) {
+
+		case SUMMARY_OF_ORDER_REQUEST:
+			return { ...state, loading: true, summaryDetails: [], error: null };
+
+		case SUMMARY_OF_ORDER_SUCCESS:
+			return { ...state, loading: false, summaryDetails: action.payload, error: null };
+
+		case SUMMARY_OF_ORDER_FAIL:
+			return { ...state, loading: false, items: null, error: action.payload };
+		default:
+			return state;
+	}
+};
+
+
+export const fetchItemsByIdReducer = (state = { loading: true, items: {}, error: null }, action) => {
+	switch (action.type) {
+
+		case PRODUCT_BY_ID_GET_REQUEST:
+			return { ...state, loading: true, items: null, error: null };
+
+		case PRODUCT_BY_ID_GET_SUCCESS:
+			return { ...state, loading: false, items: action.payload, error: null };
+
+		case PRODUCT_BY_ID_GET_FAIL:
+			return { ...state, loading: false, items: null, error: "Internal Server Error" };
+		default:
+			return state;
+	}
+};
   // Selector
 	export const getBasketTotal = (basket) => 
 	basket.reduce((amount, item) => item.price + amount, 0);
