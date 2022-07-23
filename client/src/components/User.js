@@ -1,27 +1,74 @@
 import React from "react";
-import { useSelector, useDispatch } from "react-redux"
-import { useEffect } from "react"
-import { getUserDetails } from "../actions/userAction"
+import { useSelector, useDispatch} from "react-redux"
+import { useEffect,useState} from "react"
+import { getUserDetails,editUserProfile } from "../actions/userAction"
 import "./styles/User.css"
-import CircularProgress from "@mui/material/CircularProgress"
-import { useHistory } from "react-router-dom"
+import {CircularProgress,Button} from "@mui/material"
+import { useHistory,Link } from "react-router-dom"
 const User = () => {
   let history=useHistory()
   const dispatch = useDispatch()
   const userDetailState = useSelector((state) => state.userDetails)
-  const { loading, user, error } = userDetailState
+  const { loading, user } = userDetailState
 
+	const [errorState,setErrorState]=useState('')
+	const [togglePhone, setTogglePhone] = useState(false);
+	const [toggleAddress, setToggleAddress] = useState(false);
+	const [addPhone, setAddPhone] = useState("");
+	const [addAddress,setAddAddress]= useState("");
   useEffect(() => {
     dispatch(getUserDetails(history))
   }, [])
 
+	const handleTogglePhone=()=>{
+		setErrorState('')
+		setToggleAddress(false);
+		setTogglePhone(true);
+	}
 
+	const handleToggleAddress=()=>{
+		setErrorState('')
+		setTogglePhone(false);
+		setToggleAddress(true);
+	}
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////
-  
+	const handleCancelToggle=()=>{
+		setErrorState('')
+		setToggleAddress(false)
+		setTogglePhone(false)
+	}
+
+	const handleAddAddress=(e)=>{
+		e.preventDefault();
+		if(addAddress.length<10 || addAddress.length>100){
+			setErrorState('Enter Address length between 10 to 100 Characters long');
+		}else{
+			dispatch(editUserProfile(history,addAddress,null));
+			setAddPhone('')
+			setAddAddress('')
+			setErrorState('')
+			setToggleAddress(false);
+		}
+	}
+
+	const handleAddPhone=(e)=>{
+		e.preventDefault();
+		if(addPhone.length!==10)
+		{
+			setErrorState('Phone Number must be of 10 digits long')
+		}else{
+			dispatch(editUserProfile(history,null,addPhone));
+			setAddPhone('')
+			setAddAddress('')
+			setErrorState('')
+			setTogglePhone(false);
+		}
+	}
+
   return (
     <>
-      {loading === true ? (
+      {
+				loading === true ? (
         <CircularProgress color="success" />
       ) : (
         <section style={{ backgroundcolor: "#eee" }}>
@@ -34,10 +81,10 @@ const User = () => {
                 >
                   <ol className="breadcrumb mb-0">
                     <li className="breadcrumb-item">
-                      <a href="#">Home</a>
+                      <Link to="/">Home</Link>
                     </li>
                     <li className="breadcrumb-item">
-                      <a href="#">User</a>
+                      <Link to="#">User</Link>
                     </li>
                     <li className="breadcrumb-item active" aria-current="page">
                       User Profile
@@ -87,8 +134,23 @@ const User = () => {
                         <p className="mb-0">Phone</p>
                       </div>
                       <div className="col-sm-9">
-                        <p className="text-muted mb-0">(097) 234-5678</p>
-                      </div>
+											{
+													togglePhone === false ?
+													<>
+														<p className="text-muted mb-0">{user.phone===undefined? 'Your Phone':user.phone}</p>
+														<Button onClick={handleTogglePhone} >Edit</Button>
+													</>
+													: 
+													<form>
+															<input type="text" className="form-control " placeholder="Add Phone" value={addPhone} onChange={(e) => {
+																setAddPhone(e.target.value);
+															} } />
+															<span className="text__danger" style={{color:"red"}}>{errorState}</span>
+															<Button onClick={handleAddPhone}>Save</Button>
+															<Button onClick={handleCancelToggle}>Cancel</Button>
+													</form>
+										}
+										</div>
                     </div>
                     <hr />
                     <div className="row">
@@ -96,9 +158,25 @@ const User = () => {
                         <p className="mb-0">Address</p>
                       </div>
                       <div className="col-sm-9">
-                        <p className="text-muted mb-0">
-                          Bay Area, San Francisco, CA
-                        </p>
+											{
+													toggleAddress === false ?
+													<>
+													<p className="text-muted mb-0"> {user.address===undefined?'Your Address':user.address}</p>
+														<Button onClick={(e) => {
+															handleToggleAddress(true);
+														}} >Edit</Button>
+													</>
+													: 
+													<form>
+															<input type="text" className="form-control " placeholder="Add Phone" value={addAddress} onChange={(e) => {
+																setAddAddress(e.target.value);
+															} } />
+															<span className="text__danger" style={{color:"red"}}>{errorState}</span>
+															<Button onClick={handleAddAddress}>Save</Button>
+															<Button onClick={handleCancelToggle}>Cancel</Button>
+													</form>
+
+											}
                       </div>
                     </div>
                   </div>
@@ -112,4 +190,4 @@ const User = () => {
   );
 };
 
-export default User;
+export default User

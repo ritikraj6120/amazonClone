@@ -89,9 +89,11 @@ export const orderSummary =(orderId,history) => async (dispatch) => {
 				"auth-token":getCookie('token')
 			  },
 			}
-		  );		
+		  );
+				
 		if (response.status === 200) {
 			const data = await response.json()
+			console.log("data is herer", data)	
 			dispatch({
 				type: SUMMARY_OF_ORDER_SUCCESS,
 				payload: data,

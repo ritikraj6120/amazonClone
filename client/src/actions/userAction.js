@@ -10,13 +10,15 @@ import {
 	USER_REGISTER_FAIL,
 	USER_REGISTER_REQUEST,
 	USER_REGISTER_SUCCESS,
-	USER_UPDATE_PROFILE_FAIL,
+	USER_UPDATE_PASSWORD_FAIL,
+	USER_UPDATE_PASSWORD_REQUEST,
+	USER_UPDATE_PASSWORD_SUCCESS,
 	USER_UPDATE_PROFILE_REQUEST,
-	USER_UPDATE_PROFILE_SUCCESS
+	USER_UPDATE_PROFILE_SUCCESS,
+	USER_UPDATE_PROFILE_FAIL,
 } from "../constants/userConstant";
 import {getCookie,removeCookie,setCookie} from '../Cookies/Cookie'
 import { notifyError, notifySuccess, notifyUnAuthorized, notifyWarning } from '../alert';
-import {useHistory} from 'react-router-dom'
 // const host = "https://khatabook-app.herokuapp.com"
 // const host = "https://khatabook-app6120.herokuapp.com"
 const host ="http://localhost:5000"
@@ -178,7 +180,7 @@ export const getUserDetails = (history) => async (dispatch, getState) => {
 export const changePassword = (user,history) => async (dispatch, getState) => {
 	try {
 		dispatch({
-			type: USER_UPDATE_PROFILE_REQUEST,
+			type: USER_UPDATE_PASSWORD_REQUEST,
 		});
 		const response = await fetch(`${host}/changepassword`, {
 			method: 'POST',
@@ -191,14 +193,62 @@ export const changePassword = (user,history) => async (dispatch, getState) => {
 		if (response.status === 200) {
 			notifySuccess("successfully Updated Password");
 			dispatch({
-				type: USER_UPDATE_PROFILE_SUCCESS
+				type: USER_UPDATE_PASSWORD_SUCCESS
 			});
 		}
 		else if (response.status === 400) {
 			notifyWarning("Current Password not correctly entered");
 			dispatch({
-				type: USER_UPDATE_PROFILE_FAIL,
+				type: USER_UPDATE_PASSWORD_FAIL,
 				payload: "Current Password not correctly entered"
+			});
+		}
+		else if (response.status === 401) {
+			notifyUnAuthorized("Not Authorized");
+			dispatch({
+				type: USER_UPDATE_PASSWORD_FAIL,
+				payload: "Not Authorized"
+			});
+			dispatch(handleLogout(history));
+		}
+		else {
+			dispatch({
+				type: USER_UPDATE_PASSWORD_FAIL,
+				payload: "Update Password Failed"
+			});
+			notifyError("Update Password Failed");
+		}
+	} catch (error) {
+		dispatch({
+			type: USER_UPDATE_PASSWORD_FAIL,
+			payload: "Update Password Failed",
+		});
+		notifyError("Update Password Failed");
+	}
+};
+
+export const editUserProfile=(history,address,phone) => async (dispatch) => {
+	try {
+		dispatch({
+			type: USER_UPDATE_PROFILE_REQUEST,
+		});
+		const user={
+			address:address,
+			phone:phone
+		}
+		const response = await fetch(`${host}/updateuser`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				"auth-token": getCookie('token')
+			},
+			body: JSON.stringify(user)
+		});
+		if (response.status === 200) {
+			notifySuccess("successfully Updated Details");
+			dispatch({
+				type: USER_UPDATE_PROFILE_SUCCESS,
+				payload:user
 			});
 		}
 		else if (response.status === 401) {
@@ -212,15 +262,13 @@ export const changePassword = (user,history) => async (dispatch, getState) => {
 		else {
 			dispatch({
 				type: USER_UPDATE_PROFILE_FAIL,
-				payload: "Update Password Failed"
+				payload: "internal Server Error"
 			});
-			notifyError("Update Password Failed");
 		}
 	} catch (error) {
 		dispatch({
 			type: USER_UPDATE_PROFILE_FAIL,
 			payload: "Update Password Failed",
 		});
-		notifyError("Update Password Failed");
 	}
 };

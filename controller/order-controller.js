@@ -106,25 +106,20 @@ const paymentVerification = async (req, res) => {
     return res.status(500).send("Internal Server errror");
   }
 };
-var itemsInfoArray = [];
+
 const fetchSuccessfullOrders = async (req, res) => {
   try {
     let successfullOrders = await Orders.findOne({
       order_id: req.params.id,
     }).exec();
     let itemsArray = successfullOrders.items;
-    // console.log(successfullOrders)
-
-    itemsArray.map(async (id) => {
-      const singleItem = await Items.findById(id);
-      //console.log(singleItem)
-      itemsInfoArray.push(singleItem);
-      // console.log(itemsInfoArray)
-    });
-    // console.log(itemsInfoArray)
-    res.status(200).json(itemsInfoArray);
-    itemsInfoArray = [];
-    return;
+		let itemsInfoArray=[]
+		for(let i=0;i<itemsArray.length;i++){
+			let id=itemsArray[i];
+			const singleItem = await Items.findById(id);
+			itemsInfoArray.push(singleItem);
+		}
+    return res.status(200).json(itemsInfoArray);
   } catch (err) {
     console.error(err.message);
     res.status(500).send("Internal Server Error");

@@ -112,6 +112,27 @@ const signIn= async (req, res) => {
 		}
 	}
 
+	const updateUserDetails = async (req,res)=>{
+		try{
+				const {address,phone}=req.body;
+				let userId = req.userId;
+				if(address!==null && phone!==null){
+						await User.findByIdAndUpdate(userId,
+							{ address:address,phone:phone},{new:true});
+				}else if(address!==null){
+					await User.findByIdAndUpdate(userId,
+						{ address:address},{new:true});
+				}else{
+					await User.findByIdAndUpdate(userId,
+						{ phone:phone},{new:true});
+				}
+				res.status(200).send("Updated successfully");
+		}catch(err){
+			console.log(err.message)
+			res.status(500).send("Internal Server Error");
+		}
+	}
 
-	module.exports={signUp,signIn,changePassword,userDetails}
+
+	module.exports={signUp,signIn,changePassword,userDetails,updateUserDetails}
       

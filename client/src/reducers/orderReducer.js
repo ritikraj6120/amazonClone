@@ -68,9 +68,9 @@ export const orderReducer = (state = {basket: [] }, action) => {
 	}
 };
 
+
 export const summaryReducer = (state = {loading:true,error:null,summaryDetails: [] }, action) => {
 	switch (action.type) {
-
 		case SUMMARY_OF_ORDER_REQUEST:
 			return { ...state, loading: true, summaryDetails: [], error: null };
 
