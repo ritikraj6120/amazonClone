@@ -26,7 +26,7 @@ app.use(express.json())
 app.use('/', require('./router/auth'));
 app.use('/', require('./router/items'));
 app.use('/',require('./router/order'));
-// app.use(cors())
+app.use('/',require('./router/admin'));
 
 app.post('/verifypayment',(req,res)=>{
 	console.log(req);

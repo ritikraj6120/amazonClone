@@ -8,6 +8,9 @@ import Checkout from './components/Checkout';
 import User from './components/User';
 import Summary from "./components/Summary";
 import SingleProduct from "./components/SingleProduct.js";
+import AdminLogin from "./components/Admin/AdminLogin";
+import AdminPage from "./components/Admin/AdminPage";
+import AdminWork from "./components/Admin/AdminWork";
 const AllRoutes = () => {
 	const userLoginState = useSelector(state => state.userLogin)
 	const isloggedIn=userLoginState.userInfo.isloggedIn
@@ -25,12 +28,28 @@ const AllRoutes = () => {
 	return (
 		<Switch>
 		<Route exact path="/admin">
+		{
+			isAdmin?
+			<AdminPage/>:
+			<Redirect to="/adminlogin"/>
+		}
+		</Route>
+
+		<Route exact path="/adminlogin">
+		{
+			isAdmin?
+			<Redirect to="/admin"/>:
+			<AdminLogin/>
+		}
+		</Route>
+		<Route exact path="/admin/:work">
 			{
-				isAdmin?
-				<Redirect to="/admin"/>:
-				<AdminLogin/>
+				!isAdmin?
+				<Redirect to="/adminlogin"/>:
+				<AdminWork/>
 			}
 		</Route>
+		
 			<Route exact path="/login">
 				{
 					isloggedIn ?

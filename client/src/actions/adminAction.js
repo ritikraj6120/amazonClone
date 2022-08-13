@@ -13,7 +13,7 @@ export const adminLogin = (admin, history) => async (dispatch) => {
 		dispatch({
 			type: ADMIN_LOGIN_REQUEST,
 		});
-		const response = await fetch(`${host}/signin`, {
+		const response = await fetch(`${host}/adminlogin`, {
 			method: 'POST',
 			credentials: 'include',
 			withCredentials : true,

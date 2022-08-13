@@ -2,15 +2,15 @@ import {
 	ITEMS_GET_REQUEST,
 	ITEMS_GET_SUCCESS,
 	ITEMS_GET_FAIL,
-	ITEMS_ADD_REQUEST,
-	ITEMS_ADD_SUCCESS,
-	ITEMS_ADD_FAIL,
-	ITEMS_UPDATE_REQUEST,
-	ITEMS_UPDATE_SUCCESS,
-	ITEMS_UPDATE_FAIL,
-	ITEMS_DELETE_REQUEST,
-	ITEMS_DELETE_SUCCESS,
-	ITEMS_DELETE_FAIL,
+	// ITEMS_ADD_REQUEST,
+	// ITEMS_ADD_SUCCESS,
+	// ITEMS_ADD_FAIL,
+	// ITEMS_UPDATE_REQUEST,
+	// ITEMS_UPDATE_SUCCESS,
+	// ITEMS_UPDATE_FAIL,
+	// ITEMS_DELETE_REQUEST,
+	// ITEMS_DELETE_SUCCESS,
+	// ITEMS_DELETE_FAIL,
 	PRODUCT_BY_ID_GET_REQUEST,
 	PRODUCT_BY_ID_GET_SUCCESS,
 	PRODUCT_BY_ID_GET_FAIL,
@@ -54,9 +54,6 @@ export const fetchItems = () => async (dispatch) => {
 
 export const addItems = (data) => async (dispatch) => {
 	try {
-		dispatch({
-			type: ITEMS_ADD_REQUEST,
-		});
 		const response = await fetch(`${host}/additems/`, {
 			method: 'POST',
 			headers: {
@@ -67,28 +64,15 @@ export const addItems = (data) => async (dispatch) => {
 		});
 		const json = await response.json()
 		if (response.status === 200) {
-			dispatch({
-				type: ITEMS_ADD_SUCCESS,
-				payload: json,
-			});
 		}
 		else if (response.status === 500) {
-			dispatch({
-				type: ITEMS_ADD_FAIL
-			});
 		}
 	} catch (error) {
-		dispatch({
-			type: ITEMS_ADD_FAIL
-		});
 	}
 };
 
 export const updateItems=(data)=>async(dispatch)=>{
 	try {
-		dispatch({
-			type: ITEMS_UPDATE_REQUEST,
-		});
 		const response = await fetch(`${host}/updateitems/`, {
 			method: 'POST',
 			headers: {
@@ -99,28 +83,15 @@ export const updateItems=(data)=>async(dispatch)=>{
 		});
 		const json = await response.json()
 		if (response.status === 200) {
-			dispatch({
-				type: ITEMS_UPDATE_SUCCESS,
-				payload: json,
-			});
 		}
 		else if (response.status === 500) {
-			dispatch({
-				type: ITEMS_UPDATE_FAIL
-			});
 		}
 	} catch (error) {
-		dispatch({
-			type: ITEMS_UPDATE_FAIL
-		});
 	}
 }
 
 export const deleteItems=(id)=>async(dispatch)=>{
 	try {
-		dispatch({
-			type: ITEMS_DELETE_REQUEST,
-		});
 		const response = await fetch(`${host}/updateitems/${id}`, {
 			method: 'POST',
 			headers: {
@@ -130,20 +101,11 @@ export const deleteItems=(id)=>async(dispatch)=>{
 		});
 		await response.json()
 		if (response.status === 200) {
-			dispatch({
-				type: ITEMS_DELETE_SUCCESS,
-				payload: id,
-			});
 		}
 		else if (response.status === 500) {
-			dispatch({
-				type: ITEMS_DELETE_FAIL
-			});
 		}
 	} catch (error) {
-		dispatch({
-			type: ITEMS_DELETE_FAIL
-		});
+
 	}
 }
 

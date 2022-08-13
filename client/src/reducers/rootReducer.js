@@ -11,7 +11,7 @@ import{orderReducer,
 	fetchItemsByIdReducer,
 	summaryReducer
 } from './orderReducer'
-
+import {adminLoginReducer} from './adminReducer'
 const rootReducer = combineReducers({
 	userLogin: userLoginReducer,
 	userRegister: userRegisterReducer,

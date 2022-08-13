@@ -19,8 +19,6 @@ import {
 } from "../constants/userConstant";
 import {getCookie,removeCookie,setCookie} from '../Cookies/Cookie'
 import { notifyError, notifySuccess, notifyUnAuthorized, notifyWarning } from '../alert';
-// const host = "https://khatabook-app.herokuapp.com"
-// const host = "https://khatabook-app6120.herokuapp.com"
 const host ="http://localhost:5000"
 
 export const login = (user, history) => async (dispatch) => {
@@ -272,3 +270,58 @@ export const editUserProfile=(history,address,phone) => async (dispatch) => {
 		});
 	}
 };
+
+
+
+// export const AdminLogin = (user, history) => async (dispatch) => {
+// 	try {
+// 		dispatch({
+// 			type: USER_LOGIN_REQUEST,
+// 		});
+// 		const response = await fetch(`${host}/AdminSignin`, {
+// 			method: 'POST',
+// 			credentials: 'include',
+// 			withCredentials : true,
+// 			headers: {
+// 				'Content-Type': 'application/json'
+// 			},
+// 			body: JSON.stringify(user)
+// 		});
+// 		const json = await response.json()
+// 		if (response.status === 200) {
+// 			// Save the auth token and redirect
+// 			// localStorage.setItem('token', json.authtoken);
+// 			setCookie('token',json.token)
+// 			localStorage.setItem('email',json.email);
+// 			localStorage.setItem('userName',json.userName);		
+// 			dispatch({
+// 				type: USER_LOGIN_SUCCESS,
+// 				payload: {email:json.email,userName:json.userName}
+// 			});			
+// 			notifySuccess("Successfully logged in")
+// 			console.log(response)
+// 			history.push("/Admin");
+// 		}
+// 		else if (response.status === 400) {
+// 			let x = json.error;
+// 			notifyError(x);
+// 			dispatch({
+// 				type: USER_LOGIN_FAIL,
+// 				payload: x
+// 			});
+// 		}
+// 		else {
+// 			dispatch({
+// 				type: USER_LOGIN_FAIL,
+// 				payload: "Logging Failed. Please try again"
+// 			});
+// 			notifyError("Logging Failed. Please try again");
+// 		}
+// 	} catch (error) {
+// 		dispatch({
+// 			type: USER_LOGIN_FAIL,
+// 			payload: "Logging Failed. Please try again"
+// 		});
+// 		notifyError("Logging Failed. Please try again");
+// 	}
+// };
