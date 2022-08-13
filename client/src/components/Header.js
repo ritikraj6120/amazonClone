@@ -17,7 +17,9 @@ const Header = () => {
     const handleAuthenticaton = () => {
         if (isloggedIn) {
             dispatch(handleLogout(history));
-        }
+        }else{
+					history.push('/login')
+				}
     };
     return (
         <div className="header">
@@ -42,7 +44,7 @@ const Header = () => {
                             Hello {!isloggedIn ? "Guest" : userName}
                         </span>
                         <span className="header_optionLineTwo">
-                            {userName ? "Sign Out" : "Sign In"}
+                            {!isloggedIn ? "Sign In" : "Sign Out"}
                         </span>
                     </div>
                 

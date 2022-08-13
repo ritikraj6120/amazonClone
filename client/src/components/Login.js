@@ -46,9 +46,9 @@ const Login = () => {
             <h1>Sign IN</h1>
             <form action='' method='post'>
                 <h5>E-mail</h5>
-                <input type="text" value={email} onChange = {e => setemail(e.target.value)} autoComplete/>
+                <input type="text" value={email} onChange = {e => setemail(e.target.value)} autoComplete="true"/>
                 <h5>Password</h5>
-                <input type="password"  value={password} onChange = {e => setpassword(e.target.value)} autoComplete/>
+                <input type="password"  value={password} onChange = {e => setpassword(e.target.value)} autoComplete="true"/>
                 <button className="login__signInButton " type='submit' onClick={signIn}>Sign IN</button>
             </form>
 						<div className="login__signUp">

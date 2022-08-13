@@ -75,7 +75,7 @@ export const handlePayment = async (event,money,items,history) => {
 			// console.log(response);
 			alert("Payment Failed. Please Try Again");
 		});
-
+		
 		razorpayObject.open();
 	}
 	else {

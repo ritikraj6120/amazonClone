@@ -1,7 +1,5 @@
-import { Switch, Route, Redirect,useHistory } from "react-router-dom";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from 'react-redux';
-import { handleLogout } from './actions/userAction.js'
+import { Switch, Route, Redirect} from "react-router-dom";
+import {useSelector } from 'react-redux';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import Home from './components/Home';
@@ -11,10 +9,10 @@ import User from './components/User';
 import Summary from "./components/Summary";
 import SingleProduct from "./components/SingleProduct.js";
 const AllRoutes = () => {
-	const dispatch = useDispatch();
-	let history=useHistory();
 	const userLoginState = useSelector(state => state.userLogin)
 	const isloggedIn=userLoginState.userInfo.isloggedIn
+	const adminState=useSelector(state=>state.adminLogin)
+	const isAdmin=adminState.adminInfo.isAdmin
 	console.log(isloggedIn)
 	// console.log(userLoginState)
 	// console.log(isloggedIn)
@@ -26,6 +24,13 @@ const AllRoutes = () => {
 	
 	return (
 		<Switch>
+		<Route exact path="/admin">
+			{
+				isAdmin?
+				<Redirect to="/admin"/>:
+				<AdminLogin/>
+			}
+		</Route>
 			<Route exact path="/login">
 				{
 					isloggedIn ?

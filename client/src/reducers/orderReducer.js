@@ -2,9 +2,9 @@ import {
 	ADD_TO_BASKET,
 	EMPTY_BASKET,
 	REMOVE_FROM_BASKET,
-	Items_GET_REQUEST,
-	Items_GET_SUCCESS,
-	Items_GET_FAIL,
+	ITEMS_GET_REQUEST,
+	ITEMS_GET_SUCCESS,
+	ITEMS_GET_FAIL,
 	PRODUCT_BY_ID_GET_REQUEST,
 	PRODUCT_BY_ID_GET_SUCCESS,
 	PRODUCT_BY_ID_GET_FAIL,
@@ -17,18 +17,20 @@ import {
 export const fetchItemsReducer = (state = { loading: true, items: [], error: null }, action) => {
 	switch (action.type) {
 
-		case Items_GET_REQUEST:
+		case ITEMS_GET_REQUEST:
 			return { ...state, loading: true, items: null, error: null };
 
-		case Items_GET_SUCCESS:
+		case ITEMS_GET_SUCCESS:
 			return { ...state, loading: false, items: action.payload, error: null };
 
-		case Items_GET_FAIL:
+		case ITEMS_GET_FAIL:
 			return { ...state, loading: false, items: null, error: "Internal Server Error" };
 		default:
 			return state;
 	}
 };
+
+
 
 export const orderReducer = (state = {basket: [] }, action) => {
 	switch (action.type) {

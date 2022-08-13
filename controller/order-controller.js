@@ -91,7 +91,6 @@ const paymentVerification = async (req, res) => {
         .json({ success: true, message: "Payment has been verified" });
     } else {
       console.log("inside failure verification");
-
       await Orders.findOneAndUpdate(
         { order_id: razorpay_order_id },
         { status: "failed" },

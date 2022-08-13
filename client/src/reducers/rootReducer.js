@@ -20,7 +20,8 @@ const rootReducer = combineReducers({
 	orderState:orderReducer,
 	fetchItems:fetchItemsReducer,
 	fetchItemsById:fetchItemsByIdReducer,
-	summaryState:summaryReducer
+	summaryState:summaryReducer,
+	adminLogin:adminLoginReducer
 });
 
 export default rootReducer;
