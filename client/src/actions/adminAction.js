@@ -4,7 +4,7 @@ import {
 	ADMIN_LOGIN_FAIL,
 	ADMIN_LOGOUT,
 } from "../constants/adminConstant";
-import {removeCookie,setCookie} from '../Cookies/Cookie'
+import {removeCookie,setCookie,getCookie} from '../Cookies/Cookie'
 import { notifyError, notifySuccess} from '../alert';
 const host ="http://localhost:5000"
 
@@ -65,3 +65,32 @@ export const handleLogout = (history) => (dispatch) => {
 	dispatch({ type: ADMIN_LOGOUT });
 	history.push('/adminlogin')
 };
+
+export const addNewProduct= (product)=>async ()=>{
+	console.log("jj")
+	try {
+		const response = await fetch(`${host}/adminaddnewproduct`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+				'admin-token':getCookie('admin-token')
+			},
+			body: JSON.stringify(product)
+		});
+		console.log(response.status)
+		// const json=await response.json()
+		if (response.status === 200) {	
+			notifySuccess("Product Added Successfully")
+		}
+		else if (response.status === 400) {
+			// let x = json.error;
+			notifyError("Unauthorised Admin")
+		}
+		else {
+			notifyError("Product Adding Failed. Please try again looo");
+		}
+	} catch (error) {
+		console.log(error)
+		notifyError("Product Adding Failed. Please try again  ffff");
+	}
+}

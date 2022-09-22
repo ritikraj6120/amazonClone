@@ -1,21 +1,22 @@
 import React from "react";
 import { useEffect } from "react";
-import { useParams, useHistory, useLocation } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { CircularProgress, Box, Typography } from "@mui/material";
-import SummaryProduct from "./SummaryProduct";
-import { orderSummary } from "../actions/orderAction";
+import { fetchSingleOrderHistory } from "../actions/orderAction";
 import { useDispatch, useSelector } from "react-redux";
-const Summary = () => {
+import SingleOrderItemSubUnit from "./SingleOrderItemSubUnit";
+const SingleOrderItem = () => {
     let history = useHistory();
-    let location = useLocation();
+    // let location = useLocation();
     const dispatch = useDispatch();
-    const summaryState = useSelector((state) => state.summaryState);
-    const { loading, error, items, itemDict } = summaryState;
+    const SingleOrderHistory = useSelector((state) => state.SingleOrderHistory);
+    const { loading, error, order } = SingleOrderHistory;
+    const { amount, date, items, itemDict } = order;
     let { orderId } = useParams();
 
     useEffect(() => {
-        dispatch(orderSummary(orderId, history));
-    }, [location]);
+        dispatch(fetchSingleOrderHistory(orderId, history));
+    }, []);
 
     return (
         <>
@@ -35,11 +36,11 @@ const Summary = () => {
                             margin: "5vh auto",
                         }}
                     >
-                        Your Order Summary
+                        Your Order History
                     </Typography>
 
                     {items.map((item) => (
-                        <SummaryProduct
+                        <SingleOrderItemSubUnit
                             key={item._id}
                             id={item._id}
                             title={item.title}
@@ -55,4 +56,4 @@ const Summary = () => {
     );
 };
 
-export default Summary;
+export default SingleOrderItem;

@@ -1,5 +1,7 @@
 const Admin = require('../models/Admin')
 const jwt = require('jsonwebtoken')
+const Items = require('../models/Items')
+const  Stocks =require('../models/Stock')
 
 const adminLogin= async (req, res) => {
 		let success = false;
@@ -33,7 +35,24 @@ const adminLogin= async (req, res) => {
 		}
 	};
 
+	const adminAddNewProduct=async(req,res)=>{
+		const {title, image,price,description,category,stocks}=req.body; 
+		console.log("jj")
+		try{
+			const admin=await Admin.findById(req.adminId);
+			const item=await Items.create({admin:admin._id,adminName:admin.name,title, image,price,description,category});
+			console.log(item)
+			await Stocks.create({item:item._id,quantity:stocks})
+			return res.status(200).send("success");
+		}catch(err){
+			return res.status(500).send();
+		}
+	}
+
+	
 
 
-	module.exports={adminLogin}
+
+
+	module.exports={adminLogin,adminAddNewProduct}
       

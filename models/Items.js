@@ -2,6 +2,14 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const ItemsSchema = new Schema({
+	adminId:{
+		type: Schema.Types.ObjectId,
+		ref: 'admins'
+	},
+	adminName:{
+		type: String,
+		required: true
+	},
 	title: {
 		type: String,
 		required: true
@@ -16,7 +24,8 @@ const ItemsSchema = new Schema({
 	},
 	rating: {
 		type: Number,
-		required : true
+		required : true,
+		default:0
 	},
 	description:{
 		type:String,

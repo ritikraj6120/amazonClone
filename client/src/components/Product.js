@@ -3,24 +3,16 @@ import React from 'react'
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import './styles/Product.css'
+import {addToBasket} from '../actions/orderAction'
 const Product = ({data}) => {
 const  {_id,title,image,price,rating}=data
 const dispatch=useDispatch();
 // const orderState = useSelector(state => state.orderState);
 //   const [{ basket }] = useStateValue();
 
-  const addToBasket = () => {
+  const addToBasketHandle = () => {
     // dispatch the item into the data layer
-    dispatch({
-      type: "ADD_TO_BASKET",
-      item: {
-        id: _id,
-        title: title,
-        image: image,
-        price: price,
-        rating: rating,
-      },
-    });
+	dispatch(addToBasket(data));
   };
 
 
@@ -42,7 +34,7 @@ const dispatch=useDispatch();
               { Array(5-rating).fill().map((_, i) => ( <span key={i} className="fa fa-star"></span>)) }
         </div>
 				
-    		<button onClick={addToBasket}>Add to basket</button>
+    		<button onClick={addToBasketHandle}>Add to basket</button>
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import * as React from "react";
 import { Link} from "react-router-dom";
-import "../styles/AdminPage.css";
+import "../styles/Admin_AdminPage.css";
 import "../styles/Header.css";
 const AdminPage = () => {
   return (
