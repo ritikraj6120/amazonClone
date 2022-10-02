@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-
 import {
     userLoginReducer,
     userRegisterReducer,
@@ -8,12 +7,11 @@ import {
 } from "./userReducer";
 import {
     orderReducer,
-    fetchItemsReducer,
     ordersHistoryReducer,
-    fetchItemsByIdReducer,
     summaryReducer,
-	fetchSingleOrderHistoryReducer
+    fetchSingleOrderHistoryReducer,
 } from "./orderReducer";
+import { fetchItemsReducer, fetchItemByIdReducer } from "./itemReducer";
 import { adminLoginReducer } from "./adminReducer";
 const rootReducer = combineReducers({
     userLogin: userLoginReducer,
@@ -23,9 +21,9 @@ const rootReducer = combineReducers({
     orderState: orderReducer,
     fetchItems: fetchItemsReducer,
     ordersHistory: ordersHistoryReducer,
-    fetchItemsById: fetchItemsByIdReducer,
+    fetchItemById: fetchItemByIdReducer,
     summaryState: summaryReducer,
-	SingleOrderHistory:fetchSingleOrderHistoryReducer,
+    SingleOrderHistory: fetchSingleOrderHistoryReducer,
     adminLogin: adminLoginReducer,
 });
 

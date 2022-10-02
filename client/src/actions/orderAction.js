@@ -1,7 +1,4 @@
 import {
-    ITEMS_GET_REQUEST,
-    ITEMS_GET_SUCCESS,
-    ITEMS_GET_FAIL,
     ADD_TO_BASKET,
     EMPTY_BASKET,
     REMOVE_FROM_BASKET,
@@ -20,9 +17,6 @@ import {
     // ITEMS_DELETE_REQUEST,
     // ITEMS_DELETE_SUCCESS,
     // ITEMS_DELETE_FAIL,
-    PRODUCT_BY_ID_GET_REQUEST,
-    PRODUCT_BY_ID_GET_SUCCESS,
-    PRODUCT_BY_ID_GET_FAIL,
     SUMMARY_OF_ORDER_REQUEST,
     SUMMARY_OF_ORDER_SUCCESS,
     SUMMARY_OF_ORDER_FAIL,
@@ -33,35 +27,6 @@ import {
 import { getCookie } from "../Cookies/Cookie";
 import { notifyError } from "../alert.js";
 const host = "http://localhost:5000";
-
-export const fetchItems = () => async (dispatch) => {
-    try {
-        dispatch({
-            type: ITEMS_GET_REQUEST,
-        });
-        const response = await fetch(`${host}/fetchitems/`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        const json = await response.json();
-        if (response.status === 200) {
-            dispatch({
-                type: ITEMS_GET_SUCCESS,
-                payload: json,
-            });
-        } else if (response.status === 500) {
-            dispatch({
-                type: ITEMS_GET_FAIL,
-            });
-        }
-    } catch (error) {
-        dispatch({
-            type: ITEMS_GET_FAIL,
-        });
-    }
-};
 
 export const getOrdersHistory = (page_number) => async (dispatch) => {
     try {
@@ -138,7 +103,6 @@ export const removeFromBasket = (id) => async (dispatch) => {
             },
             body: JSON.stringify({ itemId }),
         });
-        console.log(response);
     } catch (err) {
         console.log(err);
         notifyError("Please remove again");
@@ -242,34 +206,6 @@ export const fetchFromBasketDB = () => async (dispatch) => {
 // 	}
 // }
 
-export const fetchItemsById = (productId) => async (dispatch) => {
-    try {
-        dispatch({
-            type: PRODUCT_BY_ID_GET_REQUEST,
-        });
-        const response = await fetch(`${host}/fetchproductbyid/${productId}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        const json = await response.json();
-        if (response.status === 200) {
-            dispatch({
-                type: PRODUCT_BY_ID_GET_SUCCESS,
-                payload: json,
-            });
-        } else if (response.status === 500) {
-            dispatch({
-                type: PRODUCT_BY_ID_GET_FAIL,
-            });
-        }
-    } catch (error) {
-        dispatch({
-            type: PRODUCT_BY_ID_GET_FAIL,
-        });
-    }
-};
 
 export const orderSummary = (orderId, history) => async (dispatch) => {
     try {
@@ -320,7 +256,7 @@ export const orderSummary = (orderId, history) => async (dispatch) => {
 export const fetchSingleOrderHistory =
     (orderId, history) => async (dispatch) => {
         try {
-			console.log(orderId)
+            console.log(orderId);
             dispatch({
                 type: SINGLE_ORDER_HISTORY_REQUEST,
             });
@@ -337,7 +273,7 @@ export const fetchSingleOrderHistory =
 
             if (response.status === 200) {
                 const data = await response.json();
-				console.log(data)
+                console.log(data);
                 dispatch({
                     type: SINGLE_ORDER_HISTORY_SUCCESS,
                     payload: data,

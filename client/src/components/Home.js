@@ -1,6 +1,6 @@
 import React from "react";
 import { useEffect } from "react";
-import { fetchItems } from "../actions/orderAction";
+import { fetchItems } from "../actions/itemAction";
 import { useDispatch, useSelector } from "react-redux";
 import Carousel from "./Carousel";
 import "./styles/Home.css";

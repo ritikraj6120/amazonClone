@@ -17,7 +17,8 @@ const Header = () => {
     const basketDict = orderState.basketDict;
 
     useEffect(() => {
-        dispatch(fetchFromBasketDB());
+		if(isloggedIn)
+        	dispatch(fetchFromBasketDB());
     }, []);
 
     const countTotalQuantity = () => {

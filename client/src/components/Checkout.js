@@ -13,7 +13,8 @@ const Checkout = () => {
     const orderState = useSelector((state) => state.orderState);
     const basket = orderState.basket;
     const basketDict = orderState.basketDict;
-
+	console.log(basket)
+	console.log(basketDict)
     // useEffect(() => {
     //     dispatch(fetchFromBasketDB());
     // }, []);

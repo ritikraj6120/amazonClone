@@ -19,13 +19,20 @@ const Subtotal = () => {
         }
         return Math.ceil(cost);
     };
+    const getBasketItems = () => {
+        let count = 0;
+        for (let i = 0; i < basket.length; i++) {
+            count += basketDict[basket[i].id];
+        }
+        return count;
+    };
     return (
         <div className="subtotal">
             <CurrencyFormat
                 renderText={(value) => (
                     <>
                         <p>
-                            Subtotal ({basket.length} items):{" "}
+                            Subtotal ({getBasketItems()} items):{" "}
                             <strong>{value}</strong>
                         </p>
                         <small className="subtotal__gift">

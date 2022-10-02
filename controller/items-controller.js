@@ -1,8 +1,45 @@
 const Item = require("../models/Items");
+const Stock = require("../models/Stock");
 const Basket = require("../models/Basket");
 const fetchItems = async (req, res) => {
     try {
+        let items = await Item.find()
+            .lean()
+            .select("title price category image rating");
+        for (let i = 0; i < items.length; i++) {
+            const stock = await Stock.findOne({ item: items[i]._id });
+            items[i].stocks = stock.quantity;
+        }
+        res.status(200).json(items);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send("Internal Server Error");
+    }
+};
+const fetchProductById = async (req, res) => {
+    try {
+        // console.log(req.params.id)
+        let singleItem = await Item.findById({
+            _id: req.params.id,
+        })
+            .lean()
+            .select("title price description category image rating");
+        const stock = await Stock.findOne({ item: singleItem._id });
+        singleItem.stocks = stock.quantity;
+        return res.status(200).json(singleItem);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Internal Server Error");
+    }
+};
+
+const addStocksToItems = async (req, res) => {
+    try {
         const items = await Item.find();
+        const quantity = req.body.quantity;
+        for (let i = 0; i < items.length; i++) {
+            await Stock.create({ item: items[i]._id, quantity });
+        }
         res.status(200).json(items);
     } catch (error) {
         console.error(error.message);
@@ -99,7 +136,7 @@ const emptyItemsFromBasket = async (req, res) => {
     const userId = req.userId;
     try {
         await Basket.deleteMany({ userId: userId });
-		res.sendStatus(200)
+        res.sendStatus(200);
     } catch (err) {
         console.log(err);
         res.status(500).send("Internal Server Error");
@@ -108,6 +145,8 @@ const emptyItemsFromBasket = async (req, res) => {
 
 module.exports = {
     fetchItems,
+    fetchProductById,
+    addStocksToItems,
     addItemToBasket,
     removeFromBasket,
     getItemFromBasket,

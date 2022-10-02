@@ -5,15 +5,9 @@ import {
     BASKET_DB_GET_REQUEST,
     BASKET_DB_GET_SUCCESS,
     BASKET_DB_GET_FAIL,
-    ITEMS_GET_REQUEST,
-    ITEMS_GET_SUCCESS,
-    ITEMS_GET_FAIL,
     ORDERS_HISTORY_GET_REQUEST,
     ORDERS_HISTORY_GET_SUCCESS,
     ORDERS_HISTORY_GET_FAIL,
-    PRODUCT_BY_ID_GET_REQUEST,
-    PRODUCT_BY_ID_GET_SUCCESS,
-    PRODUCT_BY_ID_GET_FAIL,
     SUMMARY_OF_ORDER_REQUEST,
     SUMMARY_OF_ORDER_SUCCESS,
     SUMMARY_OF_ORDER_FAIL,
@@ -21,34 +15,6 @@ import {
     SINGLE_ORDER_HISTORY_SUCCESS,
     SINGLE_ORDER_HISTORY_FAIL,
 } from "../constants/orderConstant";
-
-export const fetchItemsReducer = (
-    state = { loading: true, items: [], error: null },
-    action
-) => {
-    switch (action.type) {
-        case ITEMS_GET_REQUEST:
-            return { ...state, loading: true, items: null, error: null };
-
-        case ITEMS_GET_SUCCESS:
-            return {
-                ...state,
-                loading: false,
-                items: action.payload,
-                error: null,
-            };
-
-        case ITEMS_GET_FAIL:
-            return {
-                ...state,
-                loading: false,
-                items: null,
-                error: "Internal Server Error",
-            };
-        default:
-            return state;
-    }
-};
 
 export const orderReducer = (
     state = { loading: true, basket: [], basketDict: {}, error: null },
@@ -69,10 +35,14 @@ export const orderReducer = (
                 };
             } else {
                 x[itemId] = 1;
+				const newItem=action.item
+				const oldBasket=state.basket
+				const newBasket=[...oldBasket,newItem]
+				console.log(newBasket)
                 return {
                     ...state,
                     loading: false,
-                    basket: [...state.basket, action.item],
+                    basket: newBasket,
                     basketDict: x,
                     error: null,
                 };
@@ -93,14 +63,17 @@ export const orderReducer = (
             if (RemovedId in RemovedBasket) {
                 RemovedBasket[RemovedId] -= 1;
                 if (RemovedBasket[RemovedId] === 0)
-                    delete RemovedBasket.RemovedId;
+                    {
+						delete RemovedBasket[RemovedId];
+						// console.log("deleted this item from basketDict")
+					}
             } else {
                 console.warn(
                     `Cant remove product (id: ${action.id}) as its not in basket!`
                 );
             }
             let newBasket = [...state.basket];
-            if (RemovedBasket[RemovedId] === 0) {
+            if (!(RemovedId in RemovedBasket)) {
                 const index = state.basket.findIndex(
                     (basketItem) => basketItem.id === action.id
                 );
@@ -250,33 +223,6 @@ export const fetchSingleOrderHistoryReducer = (
     }
 };
 
-export const fetchItemsByIdReducer = (
-    state = { loading: true, items: {}, error: null },
-    action
-) => {
-    switch (action.type) {
-        case PRODUCT_BY_ID_GET_REQUEST:
-            return { ...state, loading: true, items: null, error: null };
-
-        case PRODUCT_BY_ID_GET_SUCCESS:
-            return {
-                ...state,
-                loading: false,
-                items: action.payload,
-                error: null,
-            };
-
-        case PRODUCT_BY_ID_GET_FAIL:
-            return {
-                ...state,
-                loading: false,
-                items: null,
-                error: "Internal Server Error",
-            };
-        default:
-            return state;
-    }
-};
 // Selector
 export const getBasketTotal = (basket) =>
     basket.reduce((amount, item) => item.price + amount, 0);

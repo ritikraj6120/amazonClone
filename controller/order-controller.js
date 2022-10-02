@@ -1,10 +1,41 @@
 const Orders = require("../models/Order");
+const Stocks = require("../models/Stock");
 const Items = require("../models/Items");
 const OrderItem = require("../models/OrderItem");
+const Basket = require("../models/Basket");
+const User = require("../models/User");
 const shortid = require("shortid");
 const Razorpay = require("razorpay");
 const { KEY_ID, KEY_SECRET } = process.env;
 const crypto = require("crypto");
+const nodemailer = require("nodemailer");
+const { google } = require("googleapis");
+const conn = require("../db");
+
+const CLIENT_EMAIL = process.env.CLIENT_EMAIL; //your email from where you'll be sending emails to users
+const CLIENT_ID = process.env.CLIENT_ID; // Client ID generated on Google console cloud
+const CLIENT_SECRET = process.env.CLIENT_SECRET; // Client SECRET generated on Google console cloud
+const REDIRECT_URI = process.env.REDIRECT_URI; // The OAuth2 server (playground)
+const REFRESH_TOKEN = process.env.REFRESH_TOKEN; // The refreshToken we got from the the OAuth2 playground
+
+const OAuth2Client = new google.auth.OAuth2(
+    CLIENT_ID,
+    CLIENT_SECRET,
+    REDIRECT_URI
+);
+
+OAuth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASS,
+    },
+    tls: {
+        rejectUnauthorized: false,
+    },
+    secure: false,
+});
 
 const razorpay = new Razorpay({
     // Replace with your key_id
@@ -14,7 +45,22 @@ const razorpay = new Razorpay({
 });
 
 const InitiateOrder = async (req, res) => {
-    // return res.json("sucess");
+    const basketDict = req.body.items;
+
+    try {
+        for (let itemId in basketDict) {
+            const stock = await Stocks.findOne({ item: itemId });
+            if (basketDict[itemId] > stock.quantity) {
+                const item = await Items.findById(itemId).select("title");
+                let errorMessage = `Ordered Quantity exceeded for Item ${item.title}`;
+                throw new Error(errorMessage);
+            }
+        }
+    } catch (error) {
+        console.log(error.message);
+        return res.status(400).json(error.message);
+    }
+
     const payment_capture = 1;
     const amount = req.body.amount;
     let z = amount * 100;
@@ -29,10 +75,9 @@ const InitiateOrder = async (req, res) => {
     try {
         const response = await razorpay.orders.create(options);
         // Create a new Order
-        const basketDict = req.body.items;
         let totalItems = 0;
         for (let itemId in basketDict) {
-            totalItems += basketDict[ItemId];
+            totalItems += basketDict[itemId];
         }
         const order = await Orders.create({
             user: req.userId,
@@ -60,16 +105,6 @@ const InitiateOrder = async (req, res) => {
     }
 };
 
-// const fetchSuccessfullOrders= async (req, res) => {
-// 	try {
-// 			let successfullOrders=await Orders.find({ status: { $eq: 'success' } }).exec();
-// 			return res.status(200).json(successfullOrders);
-// 		}catch (error) {
-// 			console.error(error.message);
-// 			res.status(500).send("Internal Server Error" );
-// 		}
-// };
-
 const paymentVerification = async (req, res) => {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
         req.body;
@@ -93,6 +128,14 @@ const paymentVerification = async (req, res) => {
                 { order_id: razorpay_order_id, user: req.userId },
                 { status: "captured", date: Date.now() },
                 { new: true }
+            );
+            await Stocks.findOneAndUpdate(
+                { item: itemId },
+                {
+                    $inc: {
+                        quantity: -1 * basketDict[itemId],
+                    },
+                }
             );
             return res
                 .status(200)
@@ -136,20 +179,6 @@ const fetchSuccessfullOrders = async (req, res) => {
             items.push(singleItem);
         }
         return res.json({ items, itemDict });
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send("Internal Server Error");
-    }
-};
-
-const fetchProductById = async (req, res) => {
-    try {
-        // console.log(req.params.id)
-        let successfullOrders = await Items.findById({
-            _id: req.params.id,
-        }).exec();
-        // console.log(successfullOrders)
-        return res.status(200).json(successfullOrders);
     } catch (err) {
         console.error(err.message);
         res.status(500).send("Internal Server Error");
@@ -200,7 +229,7 @@ const fetchOrdersHistory = async (req, res) => {
             }
             temp.push({
                 _id: orders[j]._id,
-				order_id:orders[j].order_id,
+                order_id: orders[j].order_id,
                 amount: orders[j].amount,
                 date: orders[j].date,
                 totalItems: orders[j].totalItems,
@@ -230,7 +259,6 @@ const fetchOrdersHistory = async (req, res) => {
 
 const fetchSingleOrderHistory = async (req, res) => {
     try {
-		console.log("heelo")
         const order = await Orders.findOne({
             user: req.userId,
             order_id: req.query.orderId,
@@ -304,11 +332,168 @@ const fetchSingleOrderHistory = async (req, res) => {
 //     };
 // }
 
+const paymentVerificationUsingWebhook = async (req, res) => {
+    const SECRET = process.env.WEBHOOK_SECRET;
+    const crypto = require("crypto");
+    const shasum = crypto.createHmac("sha256", SECRET);
+    shasum.update(JSON.stringify(req.body));
+    const digest = shasum.digest("hex");
+    if (digest === req.headers["x-razorpay-signature"]) {
+        console.log("req is legit");
+        require("fs").writeFileSync(
+            "payment.json",
+            JSON.stringify(req.body, null, 4)
+        );
+        const accessToken = await OAuth2Client.getAccessToken();
+        // Create the email envelope (transport)
+        const transport = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+                type: "OAuth2",
+                user: CLIENT_EMAIL,
+                clientId: CLIENT_ID,
+                clientSecret: CLIENT_SECRET,
+                refreshToken: REFRESH_TOKEN,
+                accessToken: accessToken,
+            },
+        });
+
+        const order_id = req.body.payload.payment.entity.order_id;
+        const orderId = await Orders.findOne({ order_id }).select(
+            "_id user totalItems amount"
+        );
+        const paymentId = req.body.payload.payment.entity.id;
+        const orderItems = await OrderItem.find({
+            orderId: orderId._id,
+        }).select("itemId quantity");
+        let userId = orderId.user;
+        const user = await User.findById(userId);
+        if (req.body.event === "payment.failed") {
+            try {
+                let mailOptions = {
+                    from: CLIENT_EMAIL,
+                    to: user.email,
+                    subject: `Transaction Failed for Order No ${order_id} containing ${orderId.totalItems} items Worth of Rs ${orderId.amount}`,
+                    text: req.body.payload.payment.entity.error_description,
+                };
+                transport.sendMail(mailOptions, function (err, info) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        // console.log(info);
+                    }
+                });
+            } catch (err) {
+                console.log(err);
+            }
+            return res.json({ status: "ok" });
+        }
+
+        let basketDict = {};
+        for (let i = 0; i < orderItems.length; i++) {
+            basketDict[orderItems[i].itemId] = orderItems[i].quantity;
+        }
+        // code for payment revert back because stock gets over
+        let moneyRevertBack = false;
+        for (let itemId in basketDict) {
+            const stock = await Stocks.findOne({ item: itemId }).select(
+                "quantity"
+            );
+            if (basketDict[itemId] > stock.quantity) {
+                moneyRevertBack = true;
+                break;
+            }
+        }
+        if (moneyRevertBack) {
+            // write code for reverting back money in customers account
+            console.log("refunding process starts");
+            razorpay.payments.refund(paymentId, {
+                speed: "optimum",
+            });
+            await Orders.findOneAndUpdate(
+                { order_id: order_id },
+                { status: "refunded", date: Date.now() },
+                { new: true }
+            );
+        } else {
+            await Orders.findOneAndUpdate(
+                { order_id: order_id },
+                { status: "captured", date: Date.now() },
+                { new: true }
+            );
+            for (let itemId in basketDict) {
+                await Stocks.findOneAndUpdate(
+                    { item: itemId },
+                    {
+                        $inc: {
+                            quantity: -1 * basketDict[itemId],
+                        },
+                    }
+                );
+            }
+            let userId = orderId.user;
+            await Basket.findOneAndDelete({ userId });
+            const user = await User.findById(userId);
+            try {
+                let mailOptions = {
+                    from: CLIENT_EMAIL,
+                    to: user.email,
+                    subject: `Order Receipt for Order No ${order_id} containing ${orderId.totalItems} items Worth of Rs ${orderId.amount}`,
+                    text: "you have successfully ordered your items. Will reach at your doorsteps within 3 days",
+                };
+                transport.sendMail(mailOptions, function (err, info) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        // console.log(info);
+                    }
+                });
+            } catch (err) {
+                console.log(err);
+            }
+        }
+    }
+    res.json({ status: "ok" });
+};
+
+const lll = async (req, res) => {
+    const accessToken = await OAuth2Client.getAccessToken();
+
+    // Create the email envelope (transport)
+    const transport = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+            type: "OAuth2",
+            user: CLIENT_EMAIL,
+            clientId: CLIENT_ID,
+            clientSecret: CLIENT_SECRET,
+            refreshToken: REFRESH_TOKEN,
+            accessToken: accessToken,
+        },
+    });
+    let mailOptions = {
+        from: CLIENT_EMAIL,
+        to: "2019ucp1691@mnit.ac.in",
+        subject: "Order Receipt for ritik",
+        text: "you have successfully ordered your items. will reach at your doorsteps within 3 days",
+    };
+    console.log("jjjjj");
+    transport.sendMail(mailOptions, function (err, info) {
+        if (err) {
+            console.log(err);
+        } else {
+            // console.log(info);
+        }
+    });
+    return res.status(200).json("ok");
+};
+
 module.exports = {
     InitiateOrder,
     fetchSuccessfullOrders,
     paymentVerification,
-    fetchProductById,
     fetchOrdersHistory,
     fetchSingleOrderHistory,
+    paymentVerificationUsingWebhook,
+    lll,
 };

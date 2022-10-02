@@ -6,7 +6,7 @@ const OrderItem = (props) => {
     let history = useHistory();
     let { order } = props;
     let { order_id, amount, totalItems, items, date} = order;
-    date = new Date();
+    date = new Date(date);
     let imagesArray = [];
     for (let i = 0; i < items.length; i++) {
         let imgSrc = items[i].image;

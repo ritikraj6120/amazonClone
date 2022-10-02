@@ -1,6 +1,6 @@
 import { getCookie } from "../Cookies/Cookie";
 import { emptyItemsFromBasket } from "../actions/orderAction";
-import { notifyError } from "../alert";
+import { notifyError, notifyWarning } from "../alert";
 const verifyPayment = async (response, history, dispatch) => {
     const response2 = await fetch("http://localhost:5000/verifypayment", {
         method: "POST",
@@ -28,12 +28,15 @@ const optionsCreater = (amount, order_id, history, dispatch) => {
         key: "rzp_test_pBc3IC0wxhVEBR",
         amount: amount,
         currency: "INR",
-        name: "Shopping",
+        name: "Amazon Shopping",
+		image: "http://pngimg.com/uploads/amazon/amazon_PNG11.png",
         order_id: order_id,
         handler: async (response) => {
             // const json=await response.json()
             // console.log(response)
-            verifyPayment(response, history, dispatch);
+			dispatch(emptyItemsFromBasket());
+			history.push('/')
+            // verifyPayment(response, history, dispatch);
             console.log("payment verified");
         },
         theme: {
@@ -51,6 +54,10 @@ const optionsCreater = (amount, order_id, history, dispatch) => {
 export const handlePayment = async (event, money, basketDict, history, dispatch) => {
     event.preventDefault();
     // eslint-disable-next-line no-console
+	if(money<100){
+		notifyWarning("Make Order Greater than Rs 100")
+		return
+	}
     const order_details = {
         amount: money,
         items: basketDict,
@@ -66,8 +73,8 @@ export const handlePayment = async (event, money, basketDict, history, dispatch)
     });
 
     if (response.status === 200) {
-        const data = await response.json();
-        const orderid = data.id;
+        const json = await response.json();
+        const orderid = json.id;
         const options = optionsCreater(
             parseInt(money),
             orderid,
@@ -84,6 +91,6 @@ export const handlePayment = async (event, money, basketDict, history, dispatch)
         razorpayObject.open();
     } else {
         const error = await response.json();
-        notifyError("payment Failed. Please Try Again");
+        notifyError(error);
     }
 };
